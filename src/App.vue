@@ -3,6 +3,9 @@ import { computed, ref } from 'vue'
 import type { Point } from './types'
 import BackgroundGrid from './components/BackgroundGrid.vue'
 import Tile from './components/Tile.vue'
+import { getBoardScaledDelta } from '../helpers/getBoardScaledDelta'
+import { getMousePositionOnBoard } from '../helpers/getMousePositionOnBoard'
+import { getShadowPosition } from '../helpers/getShadowPosition'
 
 const boardViewboxSize = 100
 const boardGridSize = 10
@@ -68,71 +71,41 @@ const handleMove = (position: Point) => {
     return
   }
 
-  const delta = {
-    x: position.x - startingDragPoint.value.x,
-    y: position.y - startingDragPoint.value.y,
-  }
-
   if (!boardElement.value) {
     return
   }
 
-  const boardBoundingClientRect = boardElement.value.getBoundingClientRect()
-  // TODO: fix magic numbers
-  const boardScale = boardBoundingClientRect?.width / boardViewboxSize
+  // Calculate drag adjustment using helper function
+  const scaledDelta = getBoardScaledDelta(
+    position,
+    startingDragPoint.value,
+    boardElement.value,
+    boardViewboxSize,
+  )
 
-  const scaledDelta = {
-    x: delta.x / boardScale,
-    y: delta.y / boardScale,
-  }
-
-  dragAdjustment.value = {
-    x: scaledDelta.x,
-    y: scaledDelta.y,
-  }
-
-  // TODO: abstract to function
-  // Determine where the selecting tile's shadow should be placed:
-  // 1. Check the current mouse position
-  // 2. Subtract the starting drag offset
-  // 3. Figure out which square in the grid that covers
-  // 4. Return the position of that square
+  dragAdjustment.value = scaledDelta
 
   if (!startingDragOffset.value) {
     return
   }
 
-  // Calculate the adjusted mouse position by subtracting the drag offset
-  const adjustedMousePosition = {
-    x: position.x - startingDragOffset.value.x,
-    y: position.y - startingDragOffset.value.y,
-  }
-
-  // Convert screen coordinates to board coordinates
-  const boardPosition = {
-    x: adjustedMousePosition.x - boardBoundingClientRect.left,
-    y: adjustedMousePosition.y - boardBoundingClientRect.top,
-  }
-
-  // Calculate the grid position (snap to grid)
-  // TODO: fix magic numbers
-  const gridPosition = {
-    x: Math.floor(boardPosition.x / (boardBoundingClientRect.width / boardGridScale)),
-    y: Math.floor(boardPosition.y / (boardBoundingClientRect.height / boardGridScale)),
-  }
+  // Get mouse position on board using helper function
+  const boardPosition = getMousePositionOnBoard(
+    position,
+    startingDragOffset.value,
+    boardElement.value,
+  )
 
   const currentTile = tiles.value.find((tile) => tile.id === currentTileId.value)
 
-  const maxX = boardGridSize - (currentTile?.grid.rows[0]?.length ?? 0)
-  const maxY = boardGridSize - (currentTile?.grid.rows.length ?? 0)
-
-  // Ensure the position is within valid bounds (0-9 for a 10x10 grid)
-  const clampedPosition = {
-    x: Math.max(0, Math.min(maxX, gridPosition.x)),
-    y: Math.max(0, Math.min(maxY, gridPosition.y)),
-  }
-
-  shadowPosition.value = clampedPosition
+  // Calculate shadow position using helper function
+  shadowPosition.value = getShadowPosition(
+    boardPosition,
+    boardElement.value,
+    boardGridScale,
+    boardGridSize,
+    currentTile,
+  )
 }
 
 const endDrag = () => {
@@ -180,7 +153,7 @@ const endDrag = () => {
         :grid="selectedTile.grid"
         :scale="10"
         :drag-adjustment="null"
-        style="opacity: 0.2; filter: contrast(0) brightness(0.5)"
+        class="shadow"
       />
 
       <Tile
@@ -199,6 +172,7 @@ const endDrag = () => {
             startDrag(selectedTile.id, data.startingDragPoint, data.startingDragOffset)
           }
         "
+        class="selected"
       />
     </svg>
   </div>
@@ -219,5 +193,14 @@ const endDrag = () => {
   max-width: 500px;
   margin: 0 auto;
   overflow: visible;
+}
+
+.shadow {
+  opacity: 0.2;
+  filter: contrast(0) brightness(0.5);
+}
+
+.selected {
+  opacity: 0.85;
 }
 </style>
