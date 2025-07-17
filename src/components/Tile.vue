@@ -1,29 +1,53 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-
-interface Point {
-  x: number
-  y: number
-}
-
-type GridRow = (string | null)[]
-
-interface Grid {
-  rows: GridRow[]
-}
+import { ref } from 'vue'
+import type { Point, Grid } from '../types'
 
 defineProps<{
   position: Point
   grid: Grid
   scale: number
+  dragAdjustment: Point | null
 }>()
+
+const emit = defineEmits<{
+  (e: 'tile-pointerdown', data: { startingDragPoint: Point; startingDragOffset: Point }): void
+}>()
+
+const tileElement = ref<SVGSVGElement | null>(null)
 </script>
 
 <template>
-  <g class="tile" :style="`--x: ${position.x}; --y: ${position.y}; --scale: ${scale}px;`">
+  <g
+    class="tile"
+    :style="`--x: ${position.x}; --y: ${position.y}; --scale: ${scale}px;--drag-x: ${dragAdjustment?.x || 0}px; --drag-y: ${dragAdjustment?.y || 0}px;`"
+    ref="tileElement"
+  >
     <template v-for="(row, rowIndex) in grid.rows" :key="rowIndex">
       <template class="cell" v-for="(cell, cellIndex) in row" :key="cellIndex">
-        <g v-if="cell !== null" class="cell" :style="`--x: ${cellIndex}; --y: ${rowIndex}`">
+        <g
+          v-if="cell !== null"
+          class="cell"
+          :style="`--x: ${cellIndex}; --y: ${rowIndex}`"
+          @pointerdown="
+            (e: PointerEvent) => {
+              if (!tileElement) {
+                return
+              }
+
+              const startingDragPoint = { x: e.clientX, y: e.clientY }
+
+              // Find the offset of the tile top left corner from the starting drag point
+              const startingDragOffset = {
+                x: startingDragPoint.x - tileElement?.getBoundingClientRect().left,
+                y: startingDragPoint.y - tileElement?.getBoundingClientRect().top,
+              }
+
+              console.log('startingDragOffset', startingDragOffset)
+
+              emit('tile-pointerdown', { startingDragPoint, startingDragOffset })
+            }
+          "
+        >
           <rect :x="0" :y="0" :width="scale" :height="scale" class="cell-background" />
           <text
             class="cell-text"
@@ -44,7 +68,10 @@ defineProps<{
 <style scoped>
 .tile {
   transform-origin: 0 0;
-  transform: translate(calc(var(--x) * var(--scale)), calc(var(--y) * var(--scale)));
+  transform: translate(
+    calc(var(--x) * var(--scale) + var(--drag-x)),
+    calc(var(--y) * var(--scale) + var(--drag-y))
+  );
 }
 
 .cell {
@@ -54,7 +81,7 @@ defineProps<{
 
 .cell-background {
   fill: #fff;
-  stroke: #000;
+  stroke: #ccc;
   stroke-width: 0.5px;
 }
 
