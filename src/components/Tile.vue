@@ -22,7 +22,7 @@ const tileElement = ref<SVGSVGElement | null>(null)
     :style="`--x: ${position.x}; --y: ${position.y}; --scale: ${scale}px;--drag-x: ${dragAdjustment?.x || 0}px; --drag-y: ${dragAdjustment?.y || 0}px;`"
     ref="tileElement"
   >
-    <template v-for="(row, rowIndex) in grid.rows" :key="rowIndex">
+    <template v-for="(row, rowIndex) in grid" :key="rowIndex">
       <template class="cell" v-for="(cell, cellIndex) in row" :key="cellIndex">
         <g
           v-if="cell !== null"

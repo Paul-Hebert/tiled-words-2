@@ -1,11 +1,9 @@
-import type { Point } from '../src/types'
+import type { Grid, Point } from '../src/types'
 
 export interface Tile {
   id: string
   position: Point
-  grid: {
-    rows: (string | null)[][]
-  }
+  grid: Grid
 }
 
 /**
@@ -26,8 +24,8 @@ export function getShadowPosition(
     y: Math.floor(boardPosition.y / (boardBoundingClientRect.height / boardGridScale) + 1),
   }
 
-  const maxX = boardGridSize - (currentTile?.grid.rows[0]?.length ?? 0)
-  const maxY = boardGridSize - (currentTile?.grid.rows.length ?? 0)
+  const maxX = boardGridSize - (currentTile?.grid[0]?.length ?? 0)
+  const maxY = boardGridSize - (currentTile?.grid.length ?? 0)
 
   // Ensure the position is within valid bounds
   return {

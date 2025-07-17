@@ -5,6 +5,6 @@ export interface Point {
 
 export type GridRow = (string | null)[]
 
-export interface Grid {
-  rows: GridRow[]
-}
+export type Grid = GridRow[]
+
+export type Direction = 'cw' | 'ccw'

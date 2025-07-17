@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import type { Point } from './types'
 import BackgroundGrid from './components/BackgroundGrid.vue'
 import Tile from './components/Tile.vue'
-import { getBoardScaledDelta } from '../helpers/getBoardScaledDelta'
-import { getMousePositionOnBoard } from '../helpers/getMousePositionOnBoard'
-import { getShadowPosition } from '../helpers/getShadowPosition'
+import { getBoardScaledDelta } from '../helpers/get-board-scaled-delta'
+import { getMousePositionOnBoard } from '../helpers/get-mouse-position-on-board'
+import { getShadowPosition } from '../helpers/get-shadow-position'
+import { padGridToSquare } from '../helpers/pad-grid-to-square'
+import { rotateGrid } from '../helpers/rotate-grid'
 
 const boardViewboxSize = 100
 const boardGridSize = 10
@@ -15,33 +17,28 @@ const tiles = ref([
   {
     id: 'tile-1',
     position: { x: 1, y: 3 },
-    grid: {
-      rows: [
-        ['a', null, 'c'],
-        ['d', 'e', 'f'],
-        ['g', null, 'i'],
-      ],
-    },
+    grid: padGridToSquare([
+      ['a', null, 'c'],
+      ['d', 'e', 'f'],
+      ['g', null, 'i'],
+    ]),
   },
   {
     id: 'tile-2',
     position: { x: 5, y: 6 },
-    grid: {
-      rows: [
-        ['a', null, 'c'],
-        ['d', 'e', 'f'],
-      ],
-    },
+    grid: padGridToSquare([
+      ['a', null, 'c'],
+      ['d', 'e', 'f'],
+    ]),
   },
   {
     id: 'tile-3',
     position: { x: 5, y: 1 },
-    grid: {
-      rows: [
-        ['a', 'c'],
-        ['c', null],
-      ],
-    },
+    grid: padGridToSquare([
+      ['a', 'c'],
+      ['c', null],
+      ['c', null],
+    ]),
   },
 ])
 
@@ -123,6 +120,26 @@ const endDrag = () => {
   dragAdjustment.value = null
   shadowPosition.value = null
 }
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.code === 'Space' && currentTileId.value) {
+    event.preventDefault()
+
+    const tile = tiles.value.find((tile) => tile.id === currentTileId.value)
+    if (tile) {
+      // Rotate the tile's grid clockwise
+      tile.grid = rotateGrid(tile.grid, 'cw')
+    }
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 </script>
 
 <template>
@@ -175,6 +192,8 @@ const endDrag = () => {
         class="selected"
       />
     </svg>
+
+    <p v-if="currentTileId" style="text-align: center">Press <kbd>Space</kbd> to rotate the tile</p>
   </div>
 </template>
 
@@ -198,6 +217,7 @@ const endDrag = () => {
 .shadow {
   opacity: 0.2;
   filter: contrast(0) brightness(0.5);
+  transition: transform 0.05s ease-in-out;
 }
 
 .selected {
