@@ -4,6 +4,10 @@ import type { Point } from './types'
 import BackgroundGrid from './components/BackgroundGrid.vue'
 import Tile from './components/Tile.vue'
 
+const boardViewboxSize = 100
+const boardGridSize = 10
+const boardGridScale = boardViewboxSize / boardGridSize
+
 const tiles = ref([
   {
     id: 'tile-1',
@@ -75,7 +79,7 @@ const handleMove = (position: Point) => {
 
   const boardBoundingClientRect = boardElement.value.getBoundingClientRect()
   // TODO: fix magic numbers
-  const boardScale = boardBoundingClientRect?.width / 100
+  const boardScale = boardBoundingClientRect?.width / boardViewboxSize
 
   const scaledDelta = {
     x: delta.x / boardScale,
@@ -104,27 +108,28 @@ const handleMove = (position: Point) => {
     y: position.y - startingDragOffset.value.y,
   }
 
-  console.log('adjustedMousePosition', adjustedMousePosition, boardBoundingClientRect)
-
   // Convert screen coordinates to board coordinates
   const boardPosition = {
     x: adjustedMousePosition.x - boardBoundingClientRect.left,
     y: adjustedMousePosition.y - boardBoundingClientRect.top,
   }
 
-  console.log('boardPosition', boardPosition)
-
   // Calculate the grid position (snap to grid)
   // TODO: fix magic numbers
   const gridPosition = {
-    x: Math.floor(boardPosition.x / 50),
-    y: Math.floor(boardPosition.y / 50),
+    x: Math.floor(boardPosition.x / (boardBoundingClientRect.width / boardGridScale)),
+    y: Math.floor(boardPosition.y / (boardBoundingClientRect.height / boardGridScale)),
   }
+
+  const currentTile = tiles.value.find((tile) => tile.id === currentTileId.value)
+
+  const maxX = boardGridSize - (currentTile?.grid.rows[0]?.length ?? 0)
+  const maxY = boardGridSize - (currentTile?.grid.rows.length ?? 0)
 
   // Ensure the position is within valid bounds (0-9 for a 10x10 grid)
   const clampedPosition = {
-    x: Math.max(0, Math.min(9, gridPosition.x)),
-    y: Math.max(0, Math.min(9, gridPosition.y)),
+    x: Math.max(0, Math.min(maxX, gridPosition.x)),
+    y: Math.max(0, Math.min(maxY, gridPosition.y)),
   }
 
   shadowPosition.value = clampedPosition
@@ -153,8 +158,8 @@ const endDrag = () => {
     @pointermove="(e: PointerEvent) => handleMove({ x: e.clientX, y: e.clientY })"
     @pointerup="endDrag"
   >
-    <svg class="board" viewBox="0 0 100 100" ref="boardElement">
-      <BackgroundGrid :size="10" :scale="10" />
+    <svg class="board" :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`" ref="boardElement">
+      <BackgroundGrid :size="boardGridSize" :scale="boardGridScale" />
 
       <Tile
         v-for="tile in otherTiles"
