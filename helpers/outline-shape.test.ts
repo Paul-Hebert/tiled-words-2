@@ -218,4 +218,28 @@ describe('outlineShape', () => {
 
     expect(outlineShape(grid)).toEqual(expected)
   })
+
+  it('should outline an U shape', () => {
+    const grid: Grid = [
+      ['a', null, 'c'],
+      ['d', 'e', 'f'],
+    ]
+
+    const expected = [
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
+      { x: 1, y: 1 },
+      { x: 2, y: 1 },
+      { x: 2, y: 0 },
+      { x: 3, y: 0 },
+      { x: 3, y: 1 },
+      { x: 3, y: 2 },
+      { x: 2, y: 2 },
+      { x: 1, y: 2 },
+      { x: 0, y: 2 },
+      { x: 0, y: 1 },
+    ]
+
+    expect(outlineShape(grid)).toEqual(expected)
+  })
 })

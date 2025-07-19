@@ -12,15 +12,6 @@ function allAdjacentPoints(point: Point): Point[] {
   ]
 }
 
-function allDiagonalPoints(point: Point): Point[] {
-  return [
-    { x: point.x + 1, y: point.y + 1 },
-    { x: point.x + 1, y: point.y - 1 },
-    { x: point.x - 1, y: point.y + 1 },
-    { x: point.x - 1, y: point.y - 1 },
-  ]
-}
-
 /**
  * Finds the outline of non-null cells in a grid
  * @param grid - The grid to analyze
@@ -44,63 +35,99 @@ export function outlineShape(grid: Grid): Point[] {
     return []
   }
 
-  // Get the corners of each non-null cell.
-  // For example, a cell at {x: 0, y: 0} has corners at {x: 0, y: 0}, {x: 1, y: 0}, {x: 1, y: 1}, {x: 0, y: 1}
-  const corners: Point[] = []
+  // Get all edges of non-null cells
+  const allEdges: Array<{ start: Point; end: Point }> = []
+
   for (const cell of nonNullCells) {
-    const cellCorners = [
-      { x: cell.x, y: cell.y },
-      { x: cell.x + 1, y: cell.y },
-      { x: cell.x + 1, y: cell.y + 1 },
-      { x: cell.x, y: cell.y + 1 },
+    // Each cell has 4 edges: top, right, bottom, left
+    const cellEdges = [
+      // Top edge
+      { start: { x: cell.x, y: cell.y }, end: { x: cell.x + 1, y: cell.y } },
+      // Right edge
+      { start: { x: cell.x + 1, y: cell.y }, end: { x: cell.x + 1, y: cell.y + 1 } },
+      // Bottom edge
+      { start: { x: cell.x, y: cell.y + 1 }, end: { x: cell.x + 1, y: cell.y + 1 } },
+      // Left edge
+      { start: { x: cell.x, y: cell.y }, end: { x: cell.x, y: cell.y + 1 } },
     ]
 
-    // Avoid duplicates
-    for (const corner of cellCorners) {
-      const exists = corners.some((c) => c.x === corner.x && c.y === corner.y)
-      if (!exists) {
-        corners.push(corner)
-      }
+    allEdges.push(...cellEdges)
+  }
+
+  // Count how many times each edge appears
+  const edgeCounts = new Map<string, number>()
+
+  for (const edge of allEdges) {
+    // Create a canonical key for the edge (normalize direction)
+    const key1 = `${edge.start.x},${edge.start.y}-${edge.end.x},${edge.end.y}`
+    const key2 = `${edge.end.x},${edge.end.y}-${edge.start.x},${edge.start.y}`
+
+    const key = key1 < key2 ? key1 : key2
+
+    edgeCounts.set(key, (edgeCounts.get(key) || 0) + 1)
+  }
+
+  // Filter to only perimeter edges (edges that appear only once)
+  const perimeterEdges: Array<{ start: Point; end: Point }> = []
+
+  for (const edge of allEdges) {
+    const key1 = `${edge.start.x},${edge.start.y}-${edge.end.x},${edge.end.y}`
+    const key2 = `${edge.end.x},${edge.end.y}-${edge.start.x},${edge.start.y}`
+    const key = key1 < key2 ? key1 : key2
+
+    if (edgeCounts.get(key) === 1) {
+      perimeterEdges.push(edge)
     }
   }
 
-  // Remove the corners that are not on the perimeter
-  // If a corner has corners in all four directions, it's not on the perimeter
-  const perimeterCorners = corners.filter((corner) => {
-    const pointsToCheck = [...allAdjacentPoints(corner), ...allDiagonalPoints(corner)]
+  // Convert edges to a sequence of points by connecting them
+  const outline: Point[] = []
 
-    const hasCornersInAllDirections = pointsToCheck.every((p) => {
-      const isCorner = corners.some((c) => c.x === p.x && c.y === p.y)
-      return isCorner
-    })
-    return !hasCornersInAllDirections
-  })
+  if (perimeterEdges.length === 0) {
+    return outline
+  }
 
-  // Then we need to walk around the shape, starting from the start point's top left corner and going clockwise
-  let currentPoint = perimeterCorners[0]!
-  const outline: Point[] = [currentPoint]
+  // Start with the first edge
+  let currentEdge = perimeterEdges[0]!
+  outline.push(currentEdge.start, currentEdge.end)
+  const remainingEdges = perimeterEdges.slice(1)
 
-  // Walk around the corners, until we can't go any further
-  while (true) {
-    const pointsToCheck = allAdjacentPoints(currentPoint)
-
-    const nextPoint = pointsToCheck.find((p) => {
-      const alreadyVisited = outline.some((o) => o.x === p.x && o.y === p.y)
-
-      if (alreadyVisited) {
-        return false
-      }
-
-      const isCorner = perimeterCorners.some((c) => c.x === p.x && c.y === p.y)
-      return isCorner
+  // Connect edges until we can't find any more connections
+  while (remainingEdges.length > 0) {
+    const nextEdgeIndex = remainingEdges.findIndex((edge) => {
+      // Check if this edge connects to the current end point
+      return (
+        (edge.start.x === currentEdge.end.x && edge.start.y === currentEdge.end.y) ||
+        (edge.end.x === currentEdge.end.x && edge.end.y === currentEdge.end.y)
+      )
     })
 
-    if (nextPoint) {
-      currentPoint = nextPoint
-      outline.push(currentPoint)
-    } else {
+    if (nextEdgeIndex === -1) {
       break
     }
+
+    const nextEdge = remainingEdges[nextEdgeIndex]!
+    remainingEdges.splice(nextEdgeIndex, 1)
+
+    // Determine which end of the next edge to add
+    if (nextEdge.start.x === currentEdge.end.x && nextEdge.start.y === currentEdge.end.y) {
+      outline.push(nextEdge.end)
+      currentEdge = nextEdge
+    } else {
+      outline.push(nextEdge.start)
+      currentEdge = { start: nextEdge.end, end: nextEdge.start }
+    }
+  }
+
+  // Remove the last point if it's the same as the first point (to avoid duplication)
+  if (
+    outline.length > 0 &&
+    outline[0] &&
+    outline[outline.length - 1] &&
+    outline[0].x === outline[outline.length - 1].x &&
+    outline[0].y === outline[outline.length - 1].y
+  ) {
+    outline.pop()
   }
 
   return outline
