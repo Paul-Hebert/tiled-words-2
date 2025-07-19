@@ -76,8 +76,6 @@ export function outlineShape(grid: Grid): Point[] {
     return !hasCornersInAllDirections
   })
 
-  console.log({ corners, perimeterCorners })
-
   // Then we need to walk around the shape, starting from the start point's top left corner and going clockwise
   let currentPoint = perimeterCorners[0]!
   const outline: Point[] = [currentPoint]
@@ -86,18 +84,14 @@ export function outlineShape(grid: Grid): Point[] {
   while (true) {
     const pointsToCheck = allAdjacentPoints(currentPoint)
 
-    console.log({ currentPoint, pointsToCheck })
-
     const nextPoint = pointsToCheck.find((p) => {
       const alreadyVisited = outline.some((o) => o.x === p.x && o.y === p.y)
 
       if (alreadyVisited) {
-        console.log('already visited', p)
         return false
       }
 
       const isCorner = perimeterCorners.some((c) => c.x === p.x && c.y === p.y)
-      console.log('isCorner', p, isCorner)
       return isCorner
     })
 
@@ -108,8 +102,6 @@ export function outlineShape(grid: Grid): Point[] {
       break
     }
   }
-
-  console.log({ outline })
 
   return outline
 }
