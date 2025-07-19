@@ -5,7 +5,7 @@ import { pointsToSvgPathData } from '../../helpers/points-to-svg-path-data'
 import { outlineShape } from '../../helpers/outline-shape'
 
 interface TileProps extends Omit<TileType, 'id'> {
-  dragAdjustment: Point | null
+  dragAdjustment?: Point | null
   isShadow?: boolean
   isInvalid?: boolean
   isSelected?: boolean

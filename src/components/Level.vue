@@ -53,6 +53,9 @@ const placementIsValid = computed(() => {
   return canPlaceTile(selectedTile.value.grid, shadowPosition.value, gridState.value)
 })
 const foundWords = computed(() => findWords(gridState.value))
+const countOfFoundWords = computed(
+  () => props.words.filter((word) => foundWords.value.includes(word.text)).length,
+)
 
 const emit = defineEmits<{
   (e: 'next-level'): void
@@ -120,9 +123,11 @@ const endDrag = async () => {
 
   await nextTick()
 
-  if (foundWords.value.length === props.words.length) {
+  if (countOfFoundWords.value === props.words.length) {
     emit('next-level')
   }
+
+  console.log(tiles.value)
 }
 
 const handleKeyDown = (event: KeyboardEvent) => {
@@ -152,7 +157,7 @@ onUnmounted(() => {
     @pointermove="(e: PointerEvent) => handleMove({ x: e.clientX, y: e.clientY })"
     @pointerup="endDrag"
   >
-    <h1>{{ theme }}</h1>
+    <h1 class="theme">{{ theme }} ({{ countOfFoundWords }}/{{ words.length }} found)</h1>
 
     <ul class="words">
       <li v-for="word in words" :key="word.text">
@@ -170,7 +175,6 @@ onUnmounted(() => {
           :position="tile.position"
           :grid="tile.grid"
           :scale="10"
-          :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
           :was-just-dropped="tile.id === justDroppedTileId"
           @tile-pointerdown="
             (data) => startDrag(tile.id, data.startingDragPoint, data.startingDragOffset)
@@ -214,6 +218,12 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.theme {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
 .container {
   display: grid;
   gap: 1em;
@@ -221,15 +231,18 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   display: grid;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .board {
   aspect-ratio: 1 / 1;
   background-color: #000;
-  width: 90vw;
-  max-width: 500px;
+  width: 100%;
   margin: 0 auto;
   overflow: visible;
+  /* TODO: refine... */
+  touch-action: none;
 }
 
 .words {

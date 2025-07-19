@@ -25,7 +25,8 @@ const letters = computed(() => props.word.text.split(''))
 <style scoped>
 .word-display {
   display: grid;
-  gap: 0.5em;
+  gap: 0.5ch;
+  font-size: 1.25rem;
 }
 
 .word {
@@ -35,17 +36,14 @@ const letters = computed(() => props.word.text.split(''))
 
 .letter-wrapper {
   display: inline-grid;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.5em;
+  height: 1.5em;
   place-content: center;
   background: #eee;
 }
 
-.word.found {
-  opacity: 0.5;
-}
-
-.hint {
-  font-family: italic;
+.letter {
+  text-transform: uppercase;
+  font-weight: 550;
 }
 </style>
