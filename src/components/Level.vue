@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue'
-import type { Point, Tile as TileType } from '../types'
+import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue'
+import type { Point, Tile as TileType, Word } from '../types'
 import BackgroundGrid from './BackgroundGrid.vue'
 import Tile from './Tile.vue'
 import { getBoardScaledDelta } from '../../helpers/get-board-scaled-delta'
@@ -9,10 +9,14 @@ import { getShadowPosition } from '../../helpers/get-shadow-position'
 import { rotateGrid } from '../../helpers/rotate-grid'
 import { computeGridState } from '../../helpers/compute-grid-state'
 import { canPlaceTile } from '../../helpers/can-place-tile'
+import WordDisplay from './WordDisplay.vue'
+import { findWords } from '../../helpers/find-words'
 
 const props = defineProps<{
   startingTiles: TileType[]
   boardGridSize: number
+  theme: string
+  words: Word[]
 }>()
 
 const boardGridScale = 10
@@ -48,6 +52,11 @@ const placementIsValid = computed(() => {
   }
   return canPlaceTile(selectedTile.value.grid, shadowPosition.value, gridState.value)
 })
+const foundWords = computed(() => findWords(gridState.value))
+
+const emit = defineEmits<{
+  (e: 'next-level'): void
+}>()
 
 const startDrag = (tileId: string, startDragPoint: Point, startDragOffset: Point) => {
   currentTileId.value = tileId
@@ -91,7 +100,7 @@ const handleMove = (position: Point) => {
   shadowPosition.value = getShadowPosition(boardPosition, boardElement.value, boardGridScale)
 }
 
-const endDrag = () => {
+const endDrag = async () => {
   const tile = tiles.value.find((tile) => tile.id === currentTileId.value)
 
   if (!tile || !shadowPosition.value) {
@@ -108,6 +117,12 @@ const endDrag = () => {
   dragAdjustment.value = null
   shadowPosition.value = null
   justDroppedTileId.value = tile.id
+
+  await nextTick()
+
+  if (foundWords.value.length === props.words.length) {
+    emit('next-level')
+  }
 }
 
 const handleKeyDown = (event: KeyboardEvent) => {
@@ -137,6 +152,14 @@ onUnmounted(() => {
     @pointermove="(e: PointerEvent) => handleMove({ x: e.clientX, y: e.clientY })"
     @pointerup="endDrag"
   >
+    <h1>{{ theme }}</h1>
+
+    <ul class="words">
+      <li v-for="word in words" :key="word.text">
+        <WordDisplay :word="word" :is-found="foundWords.includes(word.text)" />
+      </li>
+    </ul>
+
     <svg class="board" :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`" ref="boardElement">
       <BackgroundGrid :size="boardGridSize" :scale="boardGridScale" />
 
@@ -192,6 +215,8 @@ onUnmounted(() => {
 
 <style scoped>
 .container {
+  display: grid;
+  gap: 1em;
   padding: 1rem;
   width: 100%;
   height: 100%;
@@ -205,5 +230,12 @@ onUnmounted(() => {
   max-width: 500px;
   margin: 0 auto;
   overflow: visible;
+}
+
+.words {
+  list-style: none;
+  display: grid;
+  gap: 1em;
+  padding: 0;
 }
 </style>

@@ -14,3 +14,8 @@ export interface Tile {
   position: Point
   grid: Grid
 }
+
+export interface Word {
+  text: string
+  hint: string
+}
