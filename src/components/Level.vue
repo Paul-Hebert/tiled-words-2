@@ -140,48 +140,50 @@ onUnmounted(() => {
     <svg class="board" :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`" ref="boardElement">
       <BackgroundGrid :size="boardGridSize" :scale="boardGridScale" />
 
-      <Tile
-        v-for="tile in otherTiles"
-        :key="tile.id"
-        :position="tile.position"
-        :grid="tile.grid"
-        :scale="10"
-        :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
-        :was-just-dropped="tile.id === justDroppedTileId"
-        @tile-pointerdown="
-          (data) => startDrag(tile.id, data.startingDragPoint, data.startingDragOffset)
-        "
-      />
+      <g>
+        <Tile
+          v-for="tile in otherTiles"
+          :key="tile.id"
+          :position="tile.position"
+          :grid="tile.grid"
+          :scale="10"
+          :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
+          :was-just-dropped="tile.id === justDroppedTileId"
+          @tile-pointerdown="
+            (data) => startDrag(tile.id, data.startingDragPoint, data.startingDragOffset)
+          "
+        />
 
-      <Tile
-        v-if="selectedTile && shadowPosition"
-        :key="`${selectedTile.id}-shadow`"
-        :position="shadowPosition"
-        :grid="selectedTile.grid"
-        :scale="10"
-        :drag-adjustment="null"
-        :is-shadow="true"
-        :is-invalid="!placementIsValid"
-      />
+        <Tile
+          v-if="selectedTile && shadowPosition"
+          :key="`${selectedTile.id}-shadow`"
+          :position="shadowPosition"
+          :grid="selectedTile.grid"
+          :scale="10"
+          :drag-adjustment="null"
+          :is-shadow="true"
+          :is-invalid="!placementIsValid"
+        />
 
-      <Tile
-        v-if="selectedTile"
-        :key="selectedTile.id"
-        :position="selectedTile.position"
-        :grid="selectedTile.grid"
-        :scale="10"
-        :drag-adjustment="selectedTile.id === currentTileId ? dragAdjustment : null"
-        @tile-pointerdown="
-          (data) => {
-            if (!selectedTile) {
-              return
+        <Tile
+          v-if="selectedTile"
+          :key="selectedTile.id"
+          :position="selectedTile.position"
+          :grid="selectedTile.grid"
+          :scale="10"
+          :drag-adjustment="selectedTile.id === currentTileId ? dragAdjustment : null"
+          @tile-pointerdown="
+            (data) => {
+              if (!selectedTile) {
+                return
+              }
+
+              startDrag(selectedTile.id, data.startingDragPoint, data.startingDragOffset)
             }
-
-            startDrag(selectedTile.id, data.startingDragPoint, data.startingDragOffset)
-          }
-        "
-        :is-selected="true"
-      />
+          "
+          :is-selected="true"
+        />
+      </g>
     </svg>
 
     <p v-if="currentTileId" style="text-align: center">Press <kbd>Space</kbd> to rotate the tile</p>

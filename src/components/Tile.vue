@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { Point, Grid, Tile as TileType } from '../types'
+import { computed, ref } from 'vue'
+import type { Point, Tile as TileType } from '../types'
+import { pointsToSvgPathData } from '../../helpers/points-to-svg-path-data'
+import { outlineShape } from '../../helpers/outline-shape'
 
 interface TileProps extends Omit<TileType, 'id'> {
   dragAdjustment: Point | null
@@ -11,13 +13,16 @@ interface TileProps extends Omit<TileType, 'id'> {
   scale: number
 }
 
-defineProps<TileProps>()
+const props = defineProps<TileProps>()
 
 const emit = defineEmits<{
   (e: 'tile-pointerdown', data: { startingDragPoint: Point; startingDragOffset: Point }): void
 }>()
 
 const tileElement = ref<SVGSVGElement | null>(null)
+const svgOutlinePath = computed(() => {
+  return pointsToSvgPathData(outlineShape(props.grid), props.scale)
+})
 </script>
 
 <template>
@@ -54,13 +59,12 @@ const tileElement = ref<SVGSVGElement | null>(null)
                 y: startingDragPoint.y - tileElement?.getBoundingClientRect().top,
               }
 
-              console.log('startingDragOffset', startingDragOffset)
-
               emit('tile-pointerdown', { startingDragPoint, startingDragOffset })
             }
           "
         >
           <rect :x="0" :y="0" :width="scale" :height="scale" class="cell-background" />
+
           <text
             v-if="!isShadow"
             class="cell-text"
@@ -75,6 +79,8 @@ const tileElement = ref<SVGSVGElement | null>(null)
         </g>
       </template>
     </template>
+
+    <path v-if="!isShadow" :d="svgOutlinePath" class="outline" />
   </g>
 </template>
 
@@ -93,6 +99,12 @@ const tileElement = ref<SVGSVGElement | null>(null)
 
 .tile.was-just-dropped {
   transition: transform 1s ease-in-out;
+}
+
+.outline {
+  stroke: #000;
+  stroke-width: 0.5px;
+  fill: none;
 }
 
 .cell {
