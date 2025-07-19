@@ -8,6 +8,8 @@ import { getMousePositionOnBoard } from '../helpers/get-mouse-position-on-board'
 import { getShadowPosition } from '../helpers/get-shadow-position'
 import { padGridToSquare } from '../helpers/pad-grid-to-square'
 import { rotateGrid } from '../helpers/rotate-grid'
+import { computeGridState } from '../helpers/compute-grid-state'
+import { canPlaceTile } from '../helpers/can-place-tile'
 
 const boardViewboxSize = 100
 const boardGridSize = 10
@@ -51,11 +53,25 @@ const otherTiles = computed(() => {
 })
 
 const currentTileId = ref<string | null>(null)
+const justDroppedTileId = ref<string | null>(null)
 const startingDragPoint = ref<Point | null>(null)
 const startingDragOffset = ref<Point | null>(null)
 const dragAdjustment = ref<Point | null>(null)
 const boardElement = ref<SVGSVGElement | null>(null)
 const shadowPosition = ref<Point | null>(null)
+
+const gridState = computed(() =>
+  computeGridState(
+    tiles.value.filter((tile) => tile.id !== currentTileId.value),
+    boardGridSize,
+  ),
+)
+const placementIsValid = computed(() => {
+  if (!selectedTile.value || !shadowPosition.value) {
+    return false
+  }
+  return canPlaceTile(selectedTile.value.grid, shadowPosition.value, gridState.value)
+})
 
 const startDrag = (tileId: string, startDragPoint: Point, startDragOffset: Point) => {
   currentTileId.value = tileId
@@ -96,13 +112,7 @@ const handleMove = (position: Point) => {
   const currentTile = tiles.value.find((tile) => tile.id === currentTileId.value)
 
   // Calculate shadow position using helper function
-  shadowPosition.value = getShadowPosition(
-    boardPosition,
-    boardElement.value,
-    boardGridScale,
-    boardGridSize,
-    currentTile,
-  )
+  shadowPosition.value = getShadowPosition(boardPosition, boardElement.value, boardGridScale)
 }
 
 const endDrag = () => {
@@ -112,13 +122,16 @@ const endDrag = () => {
     return
   }
 
-  tile.position = shadowPosition.value
+  if (placementIsValid.value) {
+    tile.position = shadowPosition.value
+  }
 
   currentTileId.value = null
   startingDragPoint.value = null
   startingDragOffset.value = null
   dragAdjustment.value = null
   shadowPosition.value = null
+  justDroppedTileId.value = tile.id
 }
 
 const handleKeyDown = (event: KeyboardEvent) => {
@@ -158,6 +171,7 @@ onUnmounted(() => {
         :grid="tile.grid"
         :scale="10"
         :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
+        :was-just-dropped="tile.id === justDroppedTileId"
         @tile-pointerdown="
           (data) => startDrag(tile.id, data.startingDragPoint, data.startingDragOffset)
         "
@@ -170,7 +184,8 @@ onUnmounted(() => {
         :grid="selectedTile.grid"
         :scale="10"
         :drag-adjustment="null"
-        class="shadow"
+        :is-shadow="true"
+        :is-invalid="!placementIsValid"
       />
 
       <Tile
@@ -189,7 +204,7 @@ onUnmounted(() => {
             startDrag(selectedTile.id, data.startingDragPoint, data.startingDragOffset)
           }
         "
-        class="selected"
+        :is-selected="true"
       />
     </svg>
 
@@ -212,15 +227,5 @@ onUnmounted(() => {
   max-width: 500px;
   margin: 0 auto;
   overflow: visible;
-}
-
-.shadow {
-  opacity: 0.2;
-  filter: contrast(0) brightness(0.5);
-  transition: transform 0.05s ease-in-out;
-}
-
-.selected {
-  opacity: 0.85;
 }
 </style>

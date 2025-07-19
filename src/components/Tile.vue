@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Point, Grid } from '../types'
+import type { Point, Grid, Tile as TileType } from '../types'
 
-defineProps<{
-  position: Point
-  grid: Grid
-  scale: number
+interface TileProps extends Omit<TileType, 'id'> {
   dragAdjustment: Point | null
-}>()
+  isShadow?: boolean
+  isInvalid?: boolean
+  isSelected?: boolean
+  wasJustDropped?: boolean
+  scale: number
+}
+
+defineProps<TileProps>()
 
 const emit = defineEmits<{
   (e: 'tile-pointerdown', data: { startingDragPoint: Point; startingDragOffset: Point }): void
@@ -18,7 +22,15 @@ const tileElement = ref<SVGSVGElement | null>(null)
 
 <template>
   <g
-    class="tile"
+    :class="[
+      'tile',
+      {
+        shadow: isShadow,
+        invalid: isInvalid,
+        selected: isSelected,
+        'was-just-dropped': wasJustDropped,
+      },
+    ]"
     :style="`--x: ${position.x}; --y: ${position.y}; --scale: ${scale}px;--drag-x: ${dragAdjustment?.x || 0}px; --drag-y: ${dragAdjustment?.y || 0}px;`"
     ref="tileElement"
   >
@@ -50,6 +62,7 @@ const tileElement = ref<SVGSVGElement | null>(null)
         >
           <rect :x="0" :y="0" :width="scale" :height="scale" class="cell-background" />
           <text
+            v-if="!isShadow"
             class="cell-text"
             :x="scale / 2"
             :y="scale / 2"
@@ -74,6 +87,14 @@ const tileElement = ref<SVGSVGElement | null>(null)
   );
 }
 
+.tile.selected {
+  opacity: 0.8;
+}
+
+.tile.was-just-dropped {
+  transition: transform 1s ease-in-out;
+}
+
 .cell {
   transform-origin: 0 0;
   transform: translate(calc(var(--x) * var(--scale)), calc(var(--y) * var(--scale)));
@@ -83,6 +104,18 @@ const tileElement = ref<SVGSVGElement | null>(null)
   fill: #fff;
   stroke: #ccc;
   stroke-width: 0.5px;
+}
+
+.shadow .cell-background {
+  stroke: #000;
+  fill: #000;
+  opacity: 0.2;
+}
+
+.invalid .cell-background {
+  stroke: #f00;
+  fill: #f00;
+  opacity: 0.2;
 }
 
 .cell-text {
