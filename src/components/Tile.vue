@@ -95,9 +95,11 @@ const svgOutlinePath = computed(() => {
 
 .tile.selected {
   opacity: 0.8;
+  rotate: 2deg;
 }
 
 .tile.was-just-dropped {
+  /* TODO: this is not working. */
   transition: transform 1s ease-in-out;
 }
 
@@ -106,7 +108,7 @@ const svgOutlinePath = computed(() => {
 }
 
 .outline {
-  stroke: #666;
+  stroke: #999;
   stroke-width: 0.5px;
   fill: none;
 }
@@ -118,7 +120,7 @@ const svgOutlinePath = computed(() => {
 
 .cell-background {
   fill: #fff;
-  stroke: #ccc;
+  stroke: #ddd;
   stroke-width: 0.5px;
 }
 
