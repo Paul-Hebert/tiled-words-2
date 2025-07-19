@@ -9,7 +9,7 @@
 body {
   min-height: 100vh;
   line-height: 1.4;
-  font-family: sans-serif;
+  font-family: 'Source Sans 3', sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

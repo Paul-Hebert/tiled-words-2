@@ -101,8 +101,12 @@ const svgOutlinePath = computed(() => {
   transition: transform 1s ease-in-out;
 }
 
+.shadow {
+  opacity: 0.2;
+}
+
 .outline {
-  stroke: #000;
+  stroke: #666;
   stroke-width: 0.5px;
   fill: none;
 }
@@ -121,16 +125,17 @@ const svgOutlinePath = computed(() => {
 .shadow .cell-background {
   stroke: #000;
   fill: #000;
-  opacity: 0.2;
 }
 
 .invalid .cell-background {
   stroke: #f00;
   fill: #f00;
-  opacity: 0.2;
 }
 
 .cell-text {
   user-select: none;
+  text-transform: uppercase;
+  font-weight: 550;
+  transform: translateY(0.5px);
 }
 </style>
