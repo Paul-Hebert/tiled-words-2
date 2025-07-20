@@ -95,8 +95,8 @@ const svgOutlinePath = computed(() => {
 
 .tile.selected {
   opacity: 0.8;
-  rotate: 1deg;
-  scale: 1.05;
+  /* rotate: 1deg; */
+  /* scale: 1.05; */
 }
 
 .tile.was-just-dropped {
