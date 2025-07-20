@@ -126,8 +126,6 @@ const endDrag = async () => {
   if (countOfFoundWords.value === props.words.length) {
     emit('next-level')
   }
-
-  console.log(tiles.value)
 }
 
 const handleKeyDown = (event: KeyboardEvent) => {

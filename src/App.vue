@@ -9,11 +9,10 @@ const tiles = [
       x: 2,
       y: 3,
     },
-    grid: [
+    grid: padGridToSquare([
       [null, 's', null],
       ['p', 'a', 'r'],
-      [null, null, null],
-    ],
+    ]),
   },
   {
     id: 'tile-2',
@@ -21,11 +20,7 @@ const tiles = [
       x: 0,
       y: 6,
     },
-    grid: [
-      ['r', 'o', 's'],
-      [null, null, null],
-      [null, null, null],
-    ],
+    grid: padGridToSquare([['r', 'o', 's']]),
   },
   {
     id: 'tile-3',
@@ -33,10 +28,10 @@ const tiles = [
       x: 2,
       y: 8,
     },
-    grid: [
+    grid: padGridToSquare([
       ['g', null],
       ['e', 'm'],
-    ],
+    ]),
   },
   {
     id: 'tile-4',
@@ -44,11 +39,7 @@ const tiles = [
       x: 5,
       y: 7,
     },
-    grid: [
-      ['a', 'r', 'y'],
-      [null, null, null],
-      [null, null, null],
-    ],
+    grid: padGridToSquare([['a', 'r', 'y']]),
   },
   {
     id: 'tile-5',
@@ -56,11 +47,7 @@ const tiles = [
       x: 5,
       y: 0,
     },
-    grid: [
-      ['t', null, null],
-      ['h', null, null],
-      ['y', null, null],
-    ],
+    grid: padGridToSquare([['t'], ['h'], ['y']]),
   },
   {
     id: 'tile-6',
@@ -68,12 +55,10 @@ const tiles = [
       x: 6,
       y: 4,
     },
-    grid: [
+    grid: padGridToSquare([
       [null, null, 'm', null],
       ['s', 'l', 'e', 'y'],
-      [null, null, null, null],
-      [null, null, null, null],
-    ],
+    ]),
   },
 ]
 

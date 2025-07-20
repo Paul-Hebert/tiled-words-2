@@ -95,12 +95,16 @@ const svgOutlinePath = computed(() => {
 
 .tile.selected {
   opacity: 0.8;
-  rotate: 2deg;
+  rotate: 1deg;
+  scale: 1.05;
 }
 
 .tile.was-just-dropped {
   /* TODO: this is not working. */
-  transition: transform 1s ease-in-out;
+  transition:
+    transform 1s ease-out,
+    scale 1s ease-out,
+    rotate 1s ease-out;
 }
 
 .shadow {
