@@ -13,6 +13,7 @@ const tiles = [
       [null, 's', null],
       ['p', 'a', 'r'],
     ]),
+    rotations: 1,
   },
   {
     id: 'tile-2',
@@ -21,6 +22,7 @@ const tiles = [
       y: 6,
     },
     grid: padGridToSquare([['r', 'o', 's']]),
+    rotations: 2,
   },
   {
     id: 'tile-3',
@@ -32,6 +34,7 @@ const tiles = [
       ['g', null],
       ['e', 'm'],
     ]),
+    rotations: 3,
   },
   {
     id: 'tile-4',
@@ -40,6 +43,7 @@ const tiles = [
       y: 7,
     },
     grid: padGridToSquare([['a', 'r', 'y']]),
+    rotations: 0,
   },
   {
     id: 'tile-5',
@@ -48,6 +52,7 @@ const tiles = [
       y: 0,
     },
     grid: padGridToSquare([['t'], ['h'], ['y']]),
+    rotations: 1,
   },
   {
     id: 'tile-6',
@@ -59,6 +64,7 @@ const tiles = [
       [null, null, 'm', null],
       ['s', 'l', 'e', 'y'],
     ]),
+    rotations: 1,
   },
 ]
 

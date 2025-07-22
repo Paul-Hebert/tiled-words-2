@@ -36,51 +36,61 @@ const svgOutlinePath = computed(() => {
         'was-just-dropped': wasJustDropped,
       },
     ]"
-    :style="`--x: ${position.x}; --y: ${position.y}; --scale: ${scale}px;--drag-x: ${dragAdjustment?.x || 0}px; --drag-y: ${dragAdjustment?.y || 0}px;`"
+    :style="`--x: ${position.x}; --y: ${position.y}; --scale: ${scale}px;--drag-x: ${dragAdjustment?.x || 0}px; --drag-y: ${dragAdjustment?.y || 0}px; --rotations: ${rotations};`"
     ref="tileElement"
   >
-    <template v-for="(row, rowIndex) in grid" :key="rowIndex">
-      <template class="cell" v-for="(cell, cellIndex) in row" :key="cellIndex">
-        <g
-          v-if="cell !== null"
-          class="cell"
-          :style="`--x: ${cellIndex}; --y: ${rowIndex}`"
-          @pointerdown="
-            (e: PointerEvent) => {
-              if (!tileElement) {
-                return
+    <g class="rotation-wrapper">
+      <template v-for="(row, rowIndex) in grid" :key="rowIndex">
+        <template class="cell" v-for="(cell, cellIndex) in row" :key="cellIndex">
+          <g
+            v-if="cell !== null"
+            class="cell"
+            :style="`--x: ${cellIndex}; --y: ${rowIndex}`"
+            @pointerdown.prevent="
+              (e: PointerEvent) => {
+                if (!tileElement) {
+                  return
+                }
+
+                const startingDragPoint = { x: e.clientX, y: e.clientY }
+
+                // Find the offset of the tile top left corner from the starting drag point
+                const startingDragOffset = {
+                  x: startingDragPoint.x - tileElement?.getBoundingClientRect().left,
+                  y: startingDragPoint.y - tileElement?.getBoundingClientRect().top,
+                }
+
+                emit('tile-pointerdown', { startingDragPoint, startingDragOffset })
               }
-
-              const startingDragPoint = { x: e.clientX, y: e.clientY }
-
-              // Find the offset of the tile top left corner from the starting drag point
-              const startingDragOffset = {
-                x: startingDragPoint.x - tileElement?.getBoundingClientRect().left,
-                y: startingDragPoint.y - tileElement?.getBoundingClientRect().top,
-              }
-
-              emit('tile-pointerdown', { startingDragPoint, startingDragOffset })
-            }
-          "
-        >
-          <rect :x="0" :y="0" :width="scale" :height="scale" class="cell-background" />
-
-          <text
-            v-if="!isShadow"
-            class="cell-text"
-            :x="scale / 2"
-            :y="scale / 2"
-            :font-size="scale * 0.8"
-            text-anchor="middle"
-            dominant-baseline="middle"
+            "
           >
-            {{ cell }}
-          </text>
-        </g>
-      </template>
-    </template>
+            <rect :x="0" :y="0" :width="scale" :height="scale" class="cell-background" />
 
-    <path v-if="!isShadow" :d="svgOutlinePath" class="outline" />
+            <text
+              v-if="!isShadow"
+              class="cell-text"
+              :x="scale / 2 + 0.5"
+              :y="scale / 2 + 0.5"
+              :font-size="scale * 0.8"
+              text-anchor="middle"
+              dominant-baseline="middle"
+            >
+              {{ cell }}
+            </text>
+          </g>
+        </template>
+      </template>
+
+      <path v-if="!isShadow" :d="svgOutlinePath" class="outline" />
+
+      <rect
+        x="-10"
+        y="-10"
+        :width="scale * grid[0].length + 20"
+        :height="scale * grid.length + 20"
+        class="rotation-wrapper-background"
+      />
+    </g>
   </g>
 </template>
 
@@ -91,6 +101,18 @@ const svgOutlinePath = computed(() => {
     calc(var(--x) * var(--scale) + var(--drag-x)),
     calc(var(--y) * var(--scale) + var(--drag-y))
   );
+}
+
+.rotation-wrapper {
+  transform-origin: center;
+  transform: rotate(calc(var(--rotations, 0) * 90deg));
+  transform-box: fill-box;
+  transition: transform 0.3s ease-out;
+}
+
+.rotation-wrapper-background {
+  pointer-events: none;
+  opacity: 0;
 }
 
 .tile.selected {
@@ -142,6 +164,8 @@ const svgOutlinePath = computed(() => {
   user-select: none;
   text-transform: uppercase;
   font-weight: 550;
-  transform: translateY(0.5px);
+  transform: rotate(calc(var(--rotations, 0) * -90deg));
+  transform-origin: center;
+  transform-box: fill-box;
 }
 </style>

@@ -11,6 +11,7 @@ import { computeGridState } from '../../helpers/compute-grid-state'
 import { canPlaceTile } from '../../helpers/can-place-tile'
 import WordDisplay from './WordDisplay.vue'
 import { findWords } from '../../helpers/find-words'
+import { rotateTileInPlace } from '../../helpers/rotate-tile-in-place'
 
 const props = defineProps<{
   startingTiles: TileType[]
@@ -39,19 +40,21 @@ const startingDragOffset = ref<Point | null>(null)
 const dragAdjustment = ref<Point | null>(null)
 const boardElement = ref<SVGSVGElement | null>(null)
 const shadowPosition = ref<Point | null>(null)
+const tapOrDragStartedTime = ref<number | null>(null)
 
-const gridState = computed(() =>
-  computeGridState(
-    tiles.value.filter((tile) => tile.id !== currentTileId.value),
-    props.boardGridSize,
-  ),
-)
+const gridState = computed(() => computeGridState(otherTiles.value, props.boardGridSize))
+
 const placementIsValid = computed(() => {
   if (!selectedTile.value || !shadowPosition.value) {
     return false
   }
-  return canPlaceTile(selectedTile.value.grid, shadowPosition.value, gridState.value)
+  return canPlaceTile(
+    rotateGrid(selectedTile.value.grid, selectedTile.value.rotations),
+    shadowPosition.value,
+    gridState.value,
+  )
 })
+
 const foundWords = computed(() => findWords(gridState.value))
 const countOfFoundWords = computed(
   () => props.words.filter((word) => foundWords.value.includes(word.text)).length,
@@ -65,6 +68,7 @@ const startDrag = (tileId: string, startDragPoint: Point, startDragOffset: Point
   currentTileId.value = tileId
   startingDragPoint.value = startDragPoint
   startingDragOffset.value = startDragOffset
+  tapOrDragStartedTime.value = Date.now()
 }
 
 const handleMove = (position: Point) => {
@@ -97,20 +101,33 @@ const handleMove = (position: Point) => {
     boardElement.value,
   )
 
-  const currentTile = tiles.value.find((tile) => tile.id === currentTileId.value)
-
   // Calculate shadow position using helper function
   shadowPosition.value = getShadowPosition(boardPosition, boardElement.value, boardGridScale)
+}
+
+const handleTileTap = (tileId: string) => {
+  const tile = tiles.value.find((tile) => tile.id === tileId)
+  if (tile) {
+    const newPosition = rotateTileInPlace(tile, gridState.value)
+    if (newPosition) {
+      tile.position = newPosition
+      tile.rotations++
+    } else {
+      alert('No valid position found')
+    }
+  }
 }
 
 const endDrag = async () => {
   const tile = tiles.value.find((tile) => tile.id === currentTileId.value)
 
-  if (!tile || !shadowPosition.value) {
+  if (!tile) {
     return
   }
 
-  if (placementIsValid.value) {
+  if (!tapOrDragStartedTime.value || Date.now() - tapOrDragStartedTime.value < 300) {
+    handleTileTap(tile.id)
+  } else if (placementIsValid.value && shadowPosition.value) {
     tile.position = shadowPosition.value
   }
 
@@ -127,26 +144,6 @@ const endDrag = async () => {
     emit('next-level')
   }
 }
-
-const handleKeyDown = (event: KeyboardEvent) => {
-  if (event.code === 'Space' && currentTileId.value) {
-    event.preventDefault()
-
-    const tile = tiles.value.find((tile) => tile.id === currentTileId.value)
-    if (tile) {
-      // Rotate the tile's grid clockwise
-      tile.grid = rotateGrid(tile.grid, 'cw')
-    }
-  }
-}
-
-onMounted(() => {
-  window.addEventListener('keydown', handleKeyDown)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown)
-})
 </script>
 
 <template>
@@ -163,6 +160,10 @@ onUnmounted(() => {
       </li>
     </ul>
 
+    <hr />
+
+    <p>Drag tiles to move them on the board. Tap to rotate them. Find the words to win!</p>
+
     <svg class="board" :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`" ref="boardElement">
       <BackgroundGrid :size="boardGridSize" :scale="boardGridScale" />
 
@@ -173,6 +174,7 @@ onUnmounted(() => {
           :position="tile.position"
           :grid="tile.grid"
           :scale="10"
+          :rotations="tile.rotations"
           :was-just-dropped="tile.id === justDroppedTileId"
           @tile-pointerdown="
             (data) => startDrag(tile.id, data.startingDragPoint, data.startingDragOffset)
@@ -185,6 +187,7 @@ onUnmounted(() => {
           :position="shadowPosition"
           :grid="selectedTile.grid"
           :scale="10"
+          :rotations="selectedTile.rotations"
           :drag-adjustment="null"
           :is-shadow="true"
           :is-invalid="!placementIsValid"
@@ -196,22 +199,12 @@ onUnmounted(() => {
           :position="selectedTile.position"
           :grid="selectedTile.grid"
           :scale="10"
+          :rotations="selectedTile.rotations"
           :drag-adjustment="selectedTile.id === currentTileId ? dragAdjustment : null"
-          @tile-pointerdown="
-            (data) => {
-              if (!selectedTile) {
-                return
-              }
-
-              startDrag(selectedTile.id, data.startingDragPoint, data.startingDragOffset)
-            }
-          "
           :is-selected="true"
         />
       </g>
     </svg>
-
-    <p v-if="currentTileId" style="text-align: center">Press <kbd>Space</kbd> to rotate the tile</p>
   </div>
 </template>
 

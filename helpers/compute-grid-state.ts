@@ -1,4 +1,6 @@
 import type { Grid, Tile } from '../src/types'
+import { rotateGrid } from './rotate-grid'
+import { logGrid } from './log-grid'
 
 /**
  * Computes the current state of the board grid by overlaying all tiles at their positions
@@ -19,12 +21,14 @@ export function computeGridState(tiles: Tile[], gridSize: number): Grid {
 
   // Overlay each tile onto the board grid
   for (const tile of tiles) {
-    const { position, grid } = tile
+    const { position, grid, rotations } = tile
+
+    const rotatedGrid = rotateGrid(grid, rotations)
 
     // Iterate through each cell in the tile's grid
-    for (let tileY = 0; tileY < grid.length; tileY++) {
-      for (let tileX = 0; tileX < grid[tileY].length; tileX++) {
-        const cellValue = grid[tileY][tileX]
+    for (let tileY = 0; tileY < rotatedGrid.length; tileY++) {
+      for (let tileX = 0; tileX < rotatedGrid[tileY].length; tileX++) {
+        const cellValue = rotatedGrid[tileY][tileX]
 
         // Skip null cells in the tile
         if (cellValue === null) {
@@ -43,6 +47,8 @@ export function computeGridState(tiles: Tile[], gridSize: number): Grid {
       }
     }
   }
+
+  logGrid(boardGrid)
 
   return boardGrid
 }

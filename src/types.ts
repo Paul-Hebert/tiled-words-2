@@ -13,6 +13,7 @@ export interface Tile {
   id: string
   position: Point
   grid: Grid
+  rotations: number
 }
 
 export interface Word {

@@ -1,3 +1,4 @@
+import { toRaw } from 'vue'
 import type { Grid } from '../src/types'
 
 /**
@@ -10,7 +11,7 @@ export function padGridToSquare(grid: Grid): Grid {
     return []
   }
 
-  let currentGrid = [...grid]
+  let currentGrid = structuredClone(toRaw(grid)) as Grid
   let addAtStart = false
 
   // Keep adding rows/columns until the grid is square
