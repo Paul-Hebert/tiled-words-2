@@ -164,12 +164,22 @@ const endDrag = async () => {
 
     <p>Drag tiles to move them on the board. Tap to rotate them. Find the words to win!</p>
 
-    <svg class="board" :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`" ref="boardElement">
-      <BackgroundGrid :size="boardGridSize" :scale="boardGridScale" />
+    <div class="board-container">
+      <svg
+        class="board"
+        :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`"
+        ref="boardElement"
+      >
+        <BackgroundGrid :size="boardGridSize" :scale="boardGridScale" />
+      </svg>
 
-      <g>
+      <svg
+        class="board"
+        :class="{ 'selected-container': tile.id === currentTileId }"
+        :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`"
+        v-for="tile in tiles"
+      >
         <Tile
-          v-for="tile in otherTiles"
           :key="tile.id"
           :position="tile.position"
           :grid="tile.grid"
@@ -179,8 +189,12 @@ const endDrag = async () => {
           @tile-pointerdown="
             (data) => startDrag(tile.id, data.startingDragPoint, data.startingDragOffset)
           "
+          :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
+          :is-selected="tile.id === currentTileId"
         />
+      </svg>
 
+      <svg class="board shadow-container" :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`">
         <Tile
           v-if="selectedTile && shadowPosition"
           :key="`${selectedTile.id}-shadow`"
@@ -192,19 +206,8 @@ const endDrag = async () => {
           :is-shadow="true"
           :is-invalid="!placementIsValid"
         />
-
-        <Tile
-          v-if="selectedTile"
-          :key="selectedTile.id"
-          :position="selectedTile.position"
-          :grid="selectedTile.grid"
-          :scale="10"
-          :rotations="selectedTile.rotations"
-          :drag-adjustment="selectedTile.id === currentTileId ? dragAdjustment : null"
-          :is-selected="true"
-        />
-      </g>
-    </svg>
+      </svg>
+    </div>
   </div>
 </template>
 
@@ -226,14 +229,32 @@ const endDrag = async () => {
   margin: 0 auto;
 }
 
+.board-container {
+  display: grid;
+  grid-template-areas: 'content';
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  width: 100%;
+}
+
 .board {
   aspect-ratio: 1 / 1;
-  background-color: #000;
   width: 100%;
   margin: 0 auto;
   overflow: visible;
   /* TODO: refine... */
   touch-action: none;
+  grid-area: content;
+  position: relative;
+  pointer-events: none;
+}
+
+.shadow-container {
+  z-index: 1;
+}
+
+.selected-container {
+  z-index: 2;
 }
 
 .words {

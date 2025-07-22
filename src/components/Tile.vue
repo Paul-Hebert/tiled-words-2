@@ -101,13 +101,14 @@ const svgOutlinePath = computed(() => {
     calc(var(--x) * var(--scale) + var(--drag-x)),
     calc(var(--y) * var(--scale) + var(--drag-y))
   );
+  pointer-events: auto;
 }
 
 .rotation-wrapper {
   transform-origin: center;
   transform: rotate(calc(var(--rotations, 0) * 90deg));
   transform-box: fill-box;
-  transition: transform 0.3s ease-out;
+  transition: transform 0.2s ease-out;
 }
 
 .rotation-wrapper-background {
@@ -117,16 +118,12 @@ const svgOutlinePath = computed(() => {
 
 .tile.selected {
   opacity: 0.8;
-  /* rotate: 1deg; */
-  /* scale: 1.05; */
+  /* rotate: 1deg;
+  scale: 1.05; */
 }
 
 .tile.was-just-dropped {
-  /* TODO: this is not working. */
-  transition:
-    transform 1s ease-out,
-    scale 1s ease-out,
-    rotate 1s ease-out;
+  transition: transform 0.1s ease-out;
 }
 
 .shadow {
