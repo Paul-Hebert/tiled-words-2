@@ -48,7 +48,7 @@ export function computeGridState(tiles: Tile[], gridSize: number): Grid {
     }
   }
 
-  logGrid(boardGrid)
+  // logGrid(boardGrid)
 
   return boardGrid
 }

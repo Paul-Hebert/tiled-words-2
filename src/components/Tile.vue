@@ -16,10 +16,10 @@ interface TileProps extends Omit<TileType, 'id'> {
 const props = defineProps<TileProps>()
 
 const emit = defineEmits<{
-  (e: 'tile-pointerdown', data: { startingDragPoint: Point; startingDragOffset: Point }): void
+  (e: 'tile-pointerdown', data: { tileElement: SVGSVGElement; startingDragPoint: Point }): void
 }>()
 
-const tileElement = ref<SVGSVGElement | null>(null)
+const tileBackground = ref<SVGSVGElement | null>(null)
 const svgOutlinePath = computed(() => {
   return pointsToSvgPathData(outlineShape(props.grid), props.scale)
 })
@@ -48,41 +48,47 @@ const svgOutlinePath = computed(() => {
             :style="`--x: ${cellIndex}; --y: ${rowIndex}`"
             @pointerdown.prevent="
               (e: PointerEvent) => {
-                if (!tileElement) {
+                if (!tileBackground) {
                   return
                 }
 
                 const startingDragPoint = { x: e.clientX, y: e.clientY }
 
-                // Find the offset of the tile top left corner from the starting drag point
-                const startingDragOffset = {
-                  x: startingDragPoint.x - tileElement?.getBoundingClientRect().left,
-                  y: startingDragPoint.y - tileElement?.getBoundingClientRect().top,
-                }
-
-                emit('tile-pointerdown', { startingDragPoint, startingDragOffset })
+                emit('tile-pointerdown', {
+                  tileElement: tileBackground,
+                  startingDragPoint,
+                })
               }
             "
           >
             <rect :x="0" :y="0" :width="scale" :height="scale" class="cell-background" />
 
-            <text
-              v-if="!isShadow"
-              class="cell-text"
-              :x="scale / 2 + 0.5"
-              :y="scale / 2 + 0.5"
-              :font-size="scale * 0.8"
-              text-anchor="middle"
-              dominant-baseline="middle"
-            >
-              {{ cell }}
-            </text>
-          </g>
+            <g v-if="!isShadow" class="cell-text-wrapper">
+              <text
+                class="cell-text"
+                :x="scale / 2"
+                :y="scale / 2"
+                :font-size="scale * 0.8"
+                text-anchor="middle"
+                dominant-baseline="central"
+              >
+                {{ cell }}
+              </text>
+            </g></g
+          >
         </template>
       </template>
 
       <path v-if="!isShadow" :d="svgOutlinePath" class="outline" />
 
+      <rect
+        x="0"
+        y="0"
+        :width="scale * grid[0].length"
+        :height="scale * grid.length"
+        class="tile-background"
+        ref="tileBackground"
+      />
       <rect
         x="-10"
         y="-10"
@@ -102,16 +108,19 @@ const svgOutlinePath = computed(() => {
     calc(var(--y) * var(--scale) + var(--drag-y))
   );
   pointer-events: auto;
+
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .rotation-wrapper {
   transform-origin: center;
   transform: rotate(calc(var(--rotations, 0) * 90deg));
   transform-box: fill-box;
-  transition: transform 0.2s ease-out;
+  transition: transform 0.2s var(--ease-out-back);
 }
 
-.rotation-wrapper-background {
+.rotation-wrapper-background,
+.tile-background {
   pointer-events: none;
   opacity: 0;
 }
@@ -139,6 +148,11 @@ const svgOutlinePath = computed(() => {
 .cell {
   transform-origin: 0 0;
   transform: translate(calc(var(--x) * var(--scale)), calc(var(--y) * var(--scale)));
+  cursor: pointer;
+}
+
+.selected .cell {
+  cursor: grabbing;
 }
 
 .cell-background {
@@ -161,6 +175,9 @@ const svgOutlinePath = computed(() => {
   user-select: none;
   text-transform: uppercase;
   font-weight: 550;
+}
+
+.cell-text-wrapper {
   transform: rotate(calc(var(--rotations, 0) * -90deg));
   transform-origin: center;
   transform-box: fill-box;

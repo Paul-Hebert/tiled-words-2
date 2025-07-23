@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { rotateGrid } from './rotate-grid'
-import type { Grid, Direction } from '../src/types'
+import type { Grid } from '../src/types'
 
 describe('rotateGrid', () => {
   describe('clockwise rotation', () => {
@@ -15,7 +15,7 @@ describe('rotateGrid', () => {
         ['d', 'b'],
       ]
 
-      expect(rotateGrid(input, 'cw')).toEqual(expected)
+      expect(rotateGrid(input, 1)).toEqual(expected)
     })
 
     it('should rotate a 3x3 grid clockwise', () => {
@@ -31,7 +31,7 @@ describe('rotateGrid', () => {
         ['i', 'f', 'c'],
       ]
 
-      expect(rotateGrid(input, 'cw')).toEqual(expected)
+      expect(rotateGrid(input, 1)).toEqual(expected)
     })
 
     it('should rotate a 4x4 grid clockwise', () => {
@@ -49,7 +49,7 @@ describe('rotateGrid', () => {
         ['p', 'l', 'h', 'd'],
       ]
 
-      expect(rotateGrid(input, 'cw')).toEqual(expected)
+      expect(rotateGrid(input, 1)).toEqual(expected)
     })
 
     it('should handle grids with null values', () => {
@@ -65,7 +65,7 @@ describe('rotateGrid', () => {
         ['i', null, 'c'],
       ]
 
-      expect(rotateGrid(input, 'cw')).toEqual(expected)
+      expect(rotateGrid(input, 1)).toEqual(expected)
     })
   })
 
@@ -81,7 +81,7 @@ describe('rotateGrid', () => {
         ['a', 'c'],
       ]
 
-      expect(rotateGrid(input, 'ccw')).toEqual(expected)
+      expect(rotateGrid(input, 3)).toEqual(expected)
     })
 
     it('should rotate a 3x3 grid counterclockwise', () => {
@@ -97,7 +97,7 @@ describe('rotateGrid', () => {
         ['a', 'd', 'g'],
       ]
 
-      expect(rotateGrid(input, 'ccw')).toEqual(expected)
+      expect(rotateGrid(input, 3)).toEqual(expected)
     })
 
     it('should rotate a 4x4 grid counterclockwise', () => {
@@ -115,7 +115,7 @@ describe('rotateGrid', () => {
         ['a', 'e', 'i', 'm'],
       ]
 
-      expect(rotateGrid(input, 'ccw')).toEqual(expected)
+      expect(rotateGrid(input, 3)).toEqual(expected)
     })
 
     it('should handle grids with null values', () => {
@@ -131,7 +131,7 @@ describe('rotateGrid', () => {
         ['a', null, 'g'],
       ]
 
-      expect(rotateGrid(input, 'ccw')).toEqual(expected)
+      expect(rotateGrid(input, 3)).toEqual(expected)
     })
   })
 
@@ -140,16 +140,16 @@ describe('rotateGrid', () => {
       const input: Grid = []
       const expected: Grid = []
 
-      expect(rotateGrid(input, 'cw')).toEqual(expected)
-      expect(rotateGrid(input, 'ccw')).toEqual(expected)
+      expect(rotateGrid(input, 1)).toEqual(expected)
+      expect(rotateGrid(input, 3)).toEqual(expected)
     })
 
     it('should handle a 1x1 grid', () => {
       const input: Grid = [['a']]
       const expected: Grid = [['a']]
 
-      expect(rotateGrid(input, 'cw')).toEqual(expected)
-      expect(rotateGrid(input, 'ccw')).toEqual(expected)
+      expect(rotateGrid(input, 1)).toEqual(expected)
+      expect(rotateGrid(input, 3)).toEqual(expected)
     })
 
     it('should handle a grid with all null values', () => {
@@ -162,8 +162,8 @@ describe('rotateGrid', () => {
         [null, null],
       ]
 
-      expect(rotateGrid(input, 'cw')).toEqual(expected)
-      expect(rotateGrid(input, 'ccw')).toEqual(expected)
+      expect(rotateGrid(input, 1)).toEqual(expected)
+      expect(rotateGrid(input, 3)).toEqual(expected)
     })
   })
 
@@ -174,8 +174,8 @@ describe('rotateGrid', () => {
         ['d', 'e', 'f'],
       ]
 
-      expect(() => rotateGrid(rectangularGrid, 'cw')).toThrow('Grid must be square to rotate')
-      expect(() => rotateGrid(rectangularGrid, 'ccw')).toThrow('Grid must be square to rotate')
+      expect(() => rotateGrid(rectangularGrid, 1)).toThrow('Grid must be square to rotate')
+      expect(() => rotateGrid(rectangularGrid, 3)).toThrow('Grid must be square to rotate')
     })
 
     it('should throw an error for grids with inconsistent row lengths', () => {
@@ -185,8 +185,8 @@ describe('rotateGrid', () => {
         ['f', 'g', 'h'],
       ]
 
-      expect(() => rotateGrid(irregularGrid, 'cw')).toThrow('Grid must be square to rotate')
-      expect(() => rotateGrid(irregularGrid, 'ccw')).toThrow('Grid must be square to rotate')
+      expect(() => rotateGrid(irregularGrid, 1)).toThrow('Grid must be square to rotate')
+      expect(() => rotateGrid(irregularGrid, 3)).toThrow('Grid must be square to rotate')
     })
 
     it('should throw an error for grids that are wider than tall', () => {
@@ -195,8 +195,8 @@ describe('rotateGrid', () => {
         ['e', 'f', 'g', 'h'],
       ]
 
-      expect(() => rotateGrid(wideGrid, 'cw')).toThrow('Grid must be square to rotate')
-      expect(() => rotateGrid(wideGrid, 'ccw')).toThrow('Grid must be square to rotate')
+      expect(() => rotateGrid(wideGrid, 1)).toThrow('Grid must be square to rotate')
+      expect(() => rotateGrid(wideGrid, 3)).toThrow('Grid must be square to rotate')
     })
 
     it('should throw an error for grids that are taller than wide', () => {
@@ -207,8 +207,8 @@ describe('rotateGrid', () => {
         ['g', 'h'],
       ]
 
-      expect(() => rotateGrid(tallGrid, 'cw')).toThrow('Grid must be square to rotate')
-      expect(() => rotateGrid(tallGrid, 'ccw')).toThrow('Grid must be square to rotate')
+      expect(() => rotateGrid(tallGrid, 1)).toThrow('Grid must be square to rotate')
+      expect(() => rotateGrid(tallGrid, 3)).toThrow('Grid must be square to rotate')
     })
   })
 
@@ -223,14 +223,14 @@ describe('rotateGrid', () => {
       // Rotate clockwise 4 times should return to original
       let rotated = original
       for (let i = 0; i < 4; i++) {
-        rotated = rotateGrid(rotated, 'cw')
+        rotated = rotateGrid(rotated, 1)
       }
       expect(rotated).toEqual(original)
 
       // Rotate counterclockwise 4 times should return to original
       rotated = original
       for (let i = 0; i < 4; i++) {
-        rotated = rotateGrid(rotated, 'ccw')
+        rotated = rotateGrid(rotated, 3)
       }
       expect(rotated).toEqual(original)
     })
@@ -242,15 +242,15 @@ describe('rotateGrid', () => {
         ['g', 'h', 'i'],
       ]
 
-      const cwOnce = rotateGrid(original, 'cw')
-      const ccwOnce = rotateGrid(original, 'ccw')
+      const cwOnce = rotateGrid(original, 1)
+      const ccwOnce = rotateGrid(original, 3)
 
       // Rotating cw once then ccw once should return to original
-      const cwThenCcw = rotateGrid(cwOnce, 'ccw')
+      const cwThenCcw = rotateGrid(cwOnce, 3)
       expect(cwThenCcw).toEqual(original)
 
       // Rotating ccw once then cw once should return to original
-      const ccwThenCw = rotateGrid(ccwOnce, 'cw')
+      const ccwThenCw = rotateGrid(ccwOnce, 1)
       expect(ccwThenCw).toEqual(original)
     })
   })

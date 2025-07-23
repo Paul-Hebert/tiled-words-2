@@ -9,7 +9,7 @@ import { canPlaceTile } from './can-place-tile'
  * @returns The new position if a valid placement is found, false otherwise
  */
 export function rotateTileInPlace(tile: Tile, gridState: Grid): Point | false {
-  const rotatedGrid = rotateGrid(tile.grid, 'cw')
+  let rotatedGrid = rotateGrid(tile.grid, tile.rotations + 1)
 
   // Check if the rotated tile can still be placed at the current position
   if (canPlaceTile(rotatedGrid, tile.position, gridState)) {

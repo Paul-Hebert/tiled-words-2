@@ -7,7 +7,6 @@ A word game where you reconstruct crosswords out of tiles.
 ## Major Features
 
 - More levels
-- Mobile rotation
 - Instructions
 - Main screen (New game, continue, etc.)
 
@@ -16,19 +15,22 @@ A word game where you reconstruct crosswords out of tiles.
 - Better responsive layout, especially small screen layout improvements
 - Better word/hint display
 - Micro-interactions for finding word, completing level
+- Highlight "found words" in grid (green?)
+- Sounds!
+- Bounce animation for rotation
 
 ## Code quality
 
 - Improve linting rules
 - Set up CI
 - Improve how levels are defined
+- E2E tests
 
 ## Bugs
 
-- Transitions on tiles aren't working properly
+- Prevent zoom in iOS on double tap
 
 ## Lisa feedback
 
-- Tile placement was difficult. Need to fine tune "shadow" logic
-- Too easy. Words were obvious from tiles. Starting rotated could help
-- Rotation needs to be easy. Maybe tap to rotate?
+- Show if correct orientation (vertical vs horizontal)
+- Lock together "correct" tiles

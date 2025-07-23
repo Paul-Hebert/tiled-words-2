@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { computed, ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import type { Point, Tile as TileType, Word } from '../types'
 import BackgroundGrid from './BackgroundGrid.vue'
 import Tile from './Tile.vue'
 import { getBoardScaledDelta } from '../../helpers/get-board-scaled-delta'
-import { getMousePositionOnBoard } from '../../helpers/get-mouse-position-on-board'
 import { getShadowPosition } from '../../helpers/get-shadow-position'
 import { rotateGrid } from '../../helpers/rotate-grid'
 import { computeGridState } from '../../helpers/compute-grid-state'
@@ -12,13 +11,19 @@ import { canPlaceTile } from '../../helpers/can-place-tile'
 import WordDisplay from './WordDisplay.vue'
 import { findWords } from '../../helpers/find-words'
 import { rotateTileInPlace } from '../../helpers/rotate-tile-in-place'
+import { useSound } from '@/composables/use-sound'
 
 const props = defineProps<{
   startingTiles: TileType[]
   boardGridSize: number
   theme: string
-  words: Word[]
+  words: {
+    vertical: Word[]
+    horizontal: Word[]
+  }
 }>()
+
+const { playSound } = useSound()
 
 const boardGridScale = 10
 const boardViewboxSize = props.boardGridSize * boardGridScale
@@ -36,9 +41,9 @@ const otherTiles = computed(() => {
 const currentTileId = ref<string | null>(null)
 const justDroppedTileId = ref<string | null>(null)
 const startingDragPoint = ref<Point | null>(null)
-const startingDragOffset = ref<Point | null>(null)
 const dragAdjustment = ref<Point | null>(null)
 const boardElement = ref<SVGSVGElement | null>(null)
+const currentTileElement = ref<SVGGElement | null>(null)
 const shadowPosition = ref<Point | null>(null)
 const tapOrDragStartedTime = ref<number | null>(null)
 
@@ -55,19 +60,41 @@ const placementIsValid = computed(() => {
   )
 })
 
-const foundWords = computed(() => findWords(gridState.value))
-const countOfFoundWords = computed(
-  () => props.words.filter((word) => foundWords.value.includes(word.text)).length,
-)
+const allWords = computed(() => [...props.words.vertical, ...props.words.horizontal])
+
+const foundWords = computed(() => {
+  const foundWords = findWords(gridState.value)
+
+  return foundWords
+    .filter((word) => {
+      return (
+        props.words.vertical.some(
+          (verticalWord) => verticalWord.text === word.text && word.direction === 'vertical',
+        ) ||
+        props.words.horizontal.some(
+          (horizontalWord) => horizontalWord.text === word.text && word.direction === 'horizontal',
+        )
+      )
+    })
+    .map((word) => word.text)
+})
+
+// Watch for new word discoveries and play success sound
+watch(foundWords, (newFoundWords, oldFoundWords) => {
+  if (oldFoundWords && newFoundWords.length > oldFoundWords.length) {
+    playSound('success.mp3')
+  }
+})
 
 const emit = defineEmits<{
   (e: 'next-level'): void
 }>()
 
-const startDrag = (tileId: string, startDragPoint: Point, startDragOffset: Point) => {
+const startDrag = (tileElement: SVGGElement, tileId: string, startDragPoint: Point) => {
+  currentTileElement.value = tileElement
   currentTileId.value = tileId
   startingDragPoint.value = startDragPoint
-  startingDragOffset.value = startDragOffset
+  justDroppedTileId.value = null
   tapOrDragStartedTime.value = Date.now()
 }
 
@@ -90,19 +117,16 @@ const handleMove = (position: Point) => {
 
   dragAdjustment.value = scaledDelta
 
-  if (!startingDragOffset.value) {
+  if (!currentTileElement.value) {
     return
   }
 
-  // Get mouse position on board using helper function
-  const boardPosition = getMousePositionOnBoard(
-    position,
-    startingDragOffset.value,
-    boardElement.value,
-  )
-
   // Calculate shadow position using helper function
-  shadowPosition.value = getShadowPosition(boardPosition, boardElement.value, boardGridScale)
+  shadowPosition.value = getShadowPosition(
+    boardElement.value,
+    currentTileElement.value,
+    props.boardGridSize,
+  )
 }
 
 const handleTileTap = (tileId: string) => {
@@ -127,20 +151,23 @@ const endDrag = async () => {
 
   if (!tapOrDragStartedTime.value || Date.now() - tapOrDragStartedTime.value < 300) {
     handleTileTap(tile.id)
+
+    playSound('whoosh-3.mp3', 0.1)
   } else if (placementIsValid.value && shadowPosition.value) {
     tile.position = shadowPosition.value
+
+    playSound('placed.mp3')
   }
 
   currentTileId.value = null
   startingDragPoint.value = null
-  startingDragOffset.value = null
   dragAdjustment.value = null
   shadowPosition.value = null
   justDroppedTileId.value = tile.id
 
   await nextTick()
 
-  if (countOfFoundWords.value === props.words.length) {
+  if (foundWords.value.length === allWords.value.length) {
     emit('next-level')
   }
 }
@@ -152,17 +179,31 @@ const endDrag = async () => {
     @pointermove="(e: PointerEvent) => handleMove({ x: e.clientX, y: e.clientY })"
     @pointerup="endDrag"
   >
-    <h1 class="theme">{{ theme }} ({{ countOfFoundWords }}/{{ words.length }} found)</h1>
+    <div class="meta">
+      <h1 class="theme">{{ theme }} ({{ foundWords.length }}/{{ allWords.length }} found)</h1>
 
-    <ul class="words">
-      <li v-for="word in words" :key="word.text">
-        <WordDisplay :word="word" :is-found="foundWords.includes(word.text)" />
-      </li>
-    </ul>
+      <div class="words-section">
+        <h2 class="words-header">Vertical words</h2>
+        <ul class="words">
+          <li v-for="word in words.vertical" :key="word.text">
+            <WordDisplay :word="word" :is-found="foundWords.includes(word.text)" />
+          </li>
+        </ul>
+      </div>
 
-    <hr />
+      <div class="words-section">
+        <h2 class="words-header">Horizontal words</h2>
+        <ul class="words">
+          <li v-for="word in words.horizontal" :key="word.text">
+            <WordDisplay :word="word" :is-found="foundWords.includes(word.text)" />
+          </li>
+        </ul>
+      </div>
 
-    <p>Drag tiles to move them on the board. Tap to rotate them. Find the words to win!</p>
+      <hr />
+
+      <p>Drag tiles to move them on the board. Tap to rotate them. Find the words to win!</p>
+    </div>
 
     <div class="board-container">
       <svg
@@ -186,9 +227,7 @@ const endDrag = async () => {
           :scale="10"
           :rotations="tile.rotations"
           :was-just-dropped="tile.id === justDroppedTileId"
-          @tile-pointerdown="
-            (data) => startDrag(tile.id, data.startingDragPoint, data.startingDragOffset)
-          "
+          @tile-pointerdown="(data) => startDrag(data.tileElement, tile.id, data.startingDragPoint)"
           :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
           :is-selected="tile.id === currentTileId"
         />
@@ -218,15 +257,42 @@ const endDrag = async () => {
   margin: 0;
 }
 
+.words-header {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.words-section {
+  display: grid;
+  gap: 0.5rem;
+}
+
 .container {
   display: grid;
-  gap: 1em;
+  gap: 2rem;
   padding: 1rem;
   width: 100%;
   height: 100%;
   display: grid;
   max-width: 500px;
   margin: 0 auto;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    max-width: 1000px;
+
+    .board-container {
+      order: -1;
+    }
+  }
+}
+
+.meta {
+  display: grid;
+  gap: 2rem;
 }
 
 .board-container {
@@ -235,6 +301,7 @@ const endDrag = async () => {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   width: 100%;
+  touch-action: none;
 }
 
 .board {
@@ -243,7 +310,6 @@ const endDrag = async () => {
   margin: 0 auto;
   overflow: visible;
   /* TODO: refine... */
-  touch-action: none;
   grid-area: content;
   position: relative;
   pointer-events: none;

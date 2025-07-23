@@ -1,16 +1,24 @@
 import type { Grid } from '../src/types'
 
+type WordResult = {
+  text: string
+  direction: 'vertical' | 'horizontal'
+}
+
 /**
  * Finds all words in a grid by iterating through rows and columns
  * @param grid - A 2D array representing the board state with letters or null values
  * @returns An array of strings representing all words found in the grid
  */
-export function findWords(grid: Grid): string[] {
-  const words: string[] = []
+export function findWords(grid: Grid): WordResult[] {
+  const words: WordResult[] = []
 
   // Find words in rows
   for (const row of grid) {
-    words.push(...extractWordsFromArray(row))
+    const horizontalWords = extractWordsFromArray(row).map(
+      (text) => ({ text, direction: 'horizontal' }) as WordResult,
+    )
+    words.push(...horizontalWords)
   }
 
   // Find words in columns
@@ -19,7 +27,10 @@ export function findWords(grid: Grid): string[] {
     for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
       column.push(grid[rowIndex][colIndex])
     }
-    words.push(...extractWordsFromArray(column))
+    const verticalWords = extractWordsFromArray(column).map(
+      (text) => ({ text, direction: 'vertical' }) as WordResult,
+    )
+    words.push(...verticalWords)
   }
 
   return words

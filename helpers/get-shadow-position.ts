@@ -4,31 +4,40 @@ import type { Point } from '../src/types'
  * Calculates the shadow position for a tile on the board grid
  */
 export function getShadowPosition(
-  boardPosition: Point,
   boardElement: SVGSVGElement,
-  boardGridScale: number,
+  tileElement: SVGGElement,
+  numberOfRowsAndColumns: number,
 ): Point {
   const boardBoundingClientRect = boardElement.getBoundingClientRect()
+  const tileBoundingClientRect = tileElement.getBoundingClientRect()
 
-  // Calculate cell dimensions
-  const cellWidth = boardBoundingClientRect.width / boardGridScale
-  const cellHeight = boardBoundingClientRect.height / boardGridScale
+  const boardPosition = {
+    x: tileBoundingClientRect.x - boardBoundingClientRect.x,
+    y: tileBoundingClientRect.y - boardBoundingClientRect.y,
+  }
 
-  // Calculate the position within the current cell (0 to 1)
-  const cellRelativeX = (boardPosition.x % cellWidth) / cellWidth
-  const cellRelativeY = (boardPosition.y % cellHeight) / cellHeight
+  const percentPerCell = 1 / numberOfRowsAndColumns
 
-  // Snap to the nearest corner (0, 0.5, or 1 for each axis)
-  const snappedX = cellRelativeX < 0.5 ? 0 : 1
-  const snappedY = cellRelativeY < 0.5 ? 0 : 1
+  const percentPositionOnBoard = {
+    x: boardPosition.x / boardBoundingClientRect.width,
+    y: boardPosition.y / boardBoundingClientRect.height,
+  }
 
   // Calculate the base grid position
-  const baseGridX = Math.floor(boardPosition.x / cellWidth)
-  const baseGridY = Math.floor(boardPosition.y / cellHeight)
+  const baseGridX = Math.floor(percentPositionOnBoard.x * numberOfRowsAndColumns)
+  const baseGridY = Math.floor(percentPositionOnBoard.y * numberOfRowsAndColumns)
 
-  // Return the corner position
+  // Calculate the position within the current cell (0 to 1)
+  const cellRelativeX = (percentPositionOnBoard.x * numberOfRowsAndColumns) % 1
+  const cellRelativeY = (percentPositionOnBoard.y * numberOfRowsAndColumns) % 1
+
+  // Determine which cell has the closest centerpoint
+  const snappedX = cellRelativeX < 0.5 ? baseGridX : baseGridX + 1
+  const snappedY = cellRelativeY < 0.5 ? baseGridY : baseGridY + 1
+
+  // Return the cell with the closest centerpoint
   return {
-    x: baseGridX + snappedX,
-    y: baseGridY + snappedY,
+    x: snappedX,
+    y: snappedY,
   }
 }
