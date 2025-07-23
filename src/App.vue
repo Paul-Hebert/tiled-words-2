@@ -204,7 +204,7 @@ const levels = [
   },
 ]
 
-const currentLevelIndex = ref(1)
+const currentLevelIndex = ref(0)
 const currentLevel = computed(() => levels[currentLevelIndex.value])
 
 const nextLevel = () => {
