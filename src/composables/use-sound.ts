@@ -3,7 +3,7 @@ import { ref } from 'vue'
 export const audioContext = new AudioContext()
 
 const sounds: Record<string, HTMLAudioElement> = {}
-const isMuted = ref(true)
+const isMuted = ref(false)
 
 // TODO in the future check muted state, etc.
 export function useSound() {

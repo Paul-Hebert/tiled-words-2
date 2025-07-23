@@ -187,29 +187,34 @@ const endDrag = async () => {
     @pointerup="endDrag"
   >
     <div class="meta">
-      <h1 class="theme">{{ theme }} ({{ foundWords.length }}/{{ allWords.length }} found)</h1>
+      <h1 class="theme">
+        {{ theme }}
+        <!-- ({{ foundWords.length }}/{{ allWords.length }} found) -->
+      </h1>
 
       <div class="words-section">
         <h2 class="words-header">Vertical words</h2>
         <ul class="words">
-          <li v-for="word in words.vertical" :key="word.text">
-            <WordDisplay :word="word" :is-found="foundWords.includes(word.text)" />
-          </li>
+          <WordDisplay
+            v-for="word in words.vertical"
+            :key="word.text"
+            :word="word"
+            :is-found="foundWords.includes(word.text)"
+          />
         </ul>
       </div>
 
       <div class="words-section">
         <h2 class="words-header">Horizontal words</h2>
         <ul class="words">
-          <li v-for="word in words.horizontal" :key="word.text">
-            <WordDisplay :word="word" :is-found="foundWords.includes(word.text)" />
-          </li>
+          <WordDisplay
+            v-for="word in words.horizontal"
+            :key="word.text"
+            :word="word"
+            :is-found="foundWords.includes(word.text)"
+          />
         </ul>
       </div>
-
-      <hr />
-
-      <p>Drag tiles to move them on the board. Tap to rotate them. Find the words to win!</p>
     </div>
 
     <div class="board-container">
@@ -259,9 +264,11 @@ const endDrag = async () => {
 
 <style scoped>
 .theme {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
   margin: 0;
+  font-family: var(--font-serif);
+  line-height: 1.2;
 }
 
 .words-header {
@@ -274,12 +281,11 @@ const endDrag = async () => {
 
 .words-section {
   display: grid;
-  gap: 0.5rem;
 }
 
 .container {
   display: grid;
-  gap: 2rem;
+  gap: 0.75rem;
   padding: 1rem;
   width: 100%;
   height: 100%;
@@ -299,7 +305,7 @@ const endDrag = async () => {
 
 .meta {
   display: grid;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .board-container {
@@ -331,9 +337,7 @@ const endDrag = async () => {
 }
 
 .words {
-  list-style: none;
-  display: grid;
-  gap: 1em;
-  padding: 0;
+  padding-inline: 1em;
+  padding-block: 0;
 }
 </style>

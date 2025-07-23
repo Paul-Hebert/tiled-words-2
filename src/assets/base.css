@@ -8,9 +8,14 @@
 
 html {
   line-height: 1.4;
-  font-family: 'Source Sans 3', sans-serif;
+  font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #333;
+}
+
+:root {
+  --font-sans: 'Source Sans 3', sans-serif;
+  --font-serif: 'Source Serif 4', serif;
 }
