@@ -149,7 +149,14 @@ const endDrag = async () => {
     return
   }
 
-  if (!tapOrDragStartedTime.value || Date.now() - tapOrDragStartedTime.value < 300) {
+  const longEnoughForDrag =
+    tapOrDragStartedTime.value && Date.now() - tapOrDragStartedTime.value > 300
+  const farEnoughForDrag =
+    dragAdjustment.value &&
+    Math.abs(dragAdjustment.value.x) > 10 &&
+    Math.abs(dragAdjustment.value.y) > 10
+
+  if (!longEnoughForDrag && !farEnoughForDrag) {
     handleTileTap(tile.id)
 
     playSound('whoosh-3.mp3', 0.1)
