@@ -296,6 +296,8 @@ const endDrag = async () => {
   @media (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
     max-width: 1000px;
+    gap: 2rem;
+    place-items: center;
 
     .board-container {
       order: -1;

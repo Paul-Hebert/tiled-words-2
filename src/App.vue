@@ -11,7 +11,7 @@ const levels = [
   {
     id: 'level-1',
     theme: 'Herbs from a Simon and Garfunkel song',
-    gridSize: 10,
+    gridSize: 12,
     words: {
       vertical: [
         { text: 'sage', hint: 'A wise person' },
@@ -26,7 +26,7 @@ const levels = [
       {
         id: 'tile-1',
         position: {
-          x: 2,
+          x: 3,
           y: 3,
         },
         grid: padGridToSquare([
@@ -38,7 +38,7 @@ const levels = [
       {
         id: 'tile-2',
         position: {
-          x: 0,
+          x: 1,
           y: 6,
         },
         grid: padGridToSquare([['r', 'o', 's']]),
@@ -47,7 +47,7 @@ const levels = [
       {
         id: 'tile-3',
         position: {
-          x: 2,
+          x: 3,
           y: 8,
         },
         grid: padGridToSquare([
@@ -59,7 +59,7 @@ const levels = [
       {
         id: 'tile-4',
         position: {
-          x: 5,
+          x: 6,
           y: 7,
         },
         grid: padGridToSquare([['a', 'r', 'y']]),
@@ -68,7 +68,7 @@ const levels = [
       {
         id: 'tile-5',
         position: {
-          x: 5,
+          x: 6,
           y: 0,
         },
         grid: padGridToSquare([['t'], ['h'], ['y']]),
@@ -77,7 +77,7 @@ const levels = [
       {
         id: 'tile-6',
         position: {
-          x: 6,
+          x: 7,
           y: 4,
         },
         grid: padGridToSquare([
