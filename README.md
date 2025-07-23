@@ -12,12 +12,12 @@ A word game where you reconstruct crosswords out of tiles.
 
 ## UI Design
 
-- Better responsive layout, especially small screen layout improvements
+- Better responsive layout
 - Better word/hint display
 - Micro-interactions for finding word, completing level
 - Highlight "found words" in grid (green?)
-- Sounds!
-- Bounce animation for rotation
+- Better sounds
+- Favicon + Logo
 
 ## Code quality
 
@@ -28,9 +28,9 @@ A word game where you reconstruct crosswords out of tiles.
 
 ## Bugs
 
+- Sounds not working right on iOS
 - Prevent zoom in iOS on double tap
 
 ## Lisa feedback
 
-- Show if correct orientation (vertical vs horizontal)
 - Lock together "correct" tiles
