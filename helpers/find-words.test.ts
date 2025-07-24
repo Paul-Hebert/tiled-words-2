@@ -9,7 +9,19 @@ describe('findWords', () => {
       [null, null, null, null, null],
       [null, null, null, null, null],
     ]
-    expect(findWords(grid)).toEqual([{ text: 'hello', direction: 'horizontal' }])
+    expect(findWords(grid)).toEqual([
+      {
+        text: 'hello',
+        direction: 'horizontal',
+        cells: [
+          { x: 0, y: 0 },
+          { x: 1, y: 0 },
+          { x: 2, y: 0 },
+          { x: 3, y: 0 },
+          { x: 4, y: 0 },
+        ],
+      },
+    ])
   })
 
   it('should find single word in a column', () => {
@@ -20,7 +32,19 @@ describe('findWords', () => {
       ['l', null, null],
       ['o', null, null],
     ]
-    expect(findWords(grid)).toEqual([{ text: 'hello', direction: 'vertical' }])
+    expect(findWords(grid)).toEqual([
+      {
+        text: 'hello',
+        direction: 'vertical',
+        cells: [
+          { x: 0, y: 0 },
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+          { x: 0, y: 3 },
+          { x: 0, y: 4 },
+        ],
+      },
+    ])
   })
 
   it('should find multiple words in a row', () => {
@@ -29,8 +53,28 @@ describe('findWords', () => {
       [null, null, null, null, null, null, null, null, null, null, null],
     ]
     expect(findWords(grid)).toEqual([
-      { text: 'hello', direction: 'horizontal' },
-      { text: 'world', direction: 'horizontal' },
+      {
+        text: 'hello',
+        direction: 'horizontal',
+        cells: [
+          { x: 0, y: 0 },
+          { x: 1, y: 0 },
+          { x: 2, y: 0 },
+          { x: 3, y: 0 },
+          { x: 4, y: 0 },
+        ],
+      },
+      {
+        text: 'world',
+        direction: 'horizontal',
+        cells: [
+          { x: 6, y: 0 },
+          { x: 7, y: 0 },
+          { x: 8, y: 0 },
+          { x: 9, y: 0 },
+          { x: 10, y: 0 },
+        ],
+      },
     ])
   })
 
@@ -49,8 +93,28 @@ describe('findWords', () => {
       ['d', null],
     ]
     expect(findWords(grid)).toEqual([
-      { text: 'hello', direction: 'vertical' },
-      { text: 'world', direction: 'vertical' },
+      {
+        text: 'hello',
+        direction: 'vertical',
+        cells: [
+          { x: 0, y: 0 },
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+          { x: 0, y: 3 },
+          { x: 0, y: 4 },
+        ],
+      },
+      {
+        text: 'world',
+        direction: 'vertical',
+        cells: [
+          { x: 0, y: 6 },
+          { x: 0, y: 7 },
+          { x: 0, y: 8 },
+          { x: 0, y: 9 },
+          { x: 0, y: 10 },
+        ],
+      },
     ])
   })
 
@@ -63,9 +127,38 @@ describe('findWords', () => {
       ['l', null, null, null, 'd'],
     ]
     expect(findWords(grid)).toEqual([
-      { text: 'hello', direction: 'horizontal' },
-      { text: 'horl', direction: 'vertical' },
-      { text: 'world', direction: 'vertical' },
+      {
+        text: 'hello',
+        direction: 'horizontal',
+        cells: [
+          { x: 0, y: 1 },
+          { x: 1, y: 1 },
+          { x: 2, y: 1 },
+          { x: 3, y: 1 },
+          { x: 4, y: 1 },
+        ],
+      },
+      {
+        text: 'horl',
+        direction: 'vertical',
+        cells: [
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+          { x: 0, y: 3 },
+          { x: 0, y: 4 },
+        ],
+      },
+      {
+        text: 'world',
+        direction: 'vertical',
+        cells: [
+          { x: 4, y: 0 },
+          { x: 4, y: 1 },
+          { x: 4, y: 2 },
+          { x: 4, y: 3 },
+          { x: 4, y: 4 },
+        ],
+      },
     ])
   })
 
@@ -78,11 +171,52 @@ describe('findWords', () => {
       ['b', 'i', 'r', 'd', null, null, null],
     ]
     expect(findWords(grid)).toEqual([
-      { text: 'cat', direction: 'horizontal' },
-      { text: 'dog', direction: 'horizontal' },
-      { text: 'bird', direction: 'horizontal' },
-      { text: 'cat', direction: 'vertical' },
-      { text: 'dog', direction: 'vertical' },
+      {
+        text: 'cat',
+        direction: 'horizontal',
+        cells: [
+          { x: 0, y: 0 },
+          { x: 1, y: 0 },
+          { x: 2, y: 0 },
+        ],
+      },
+      {
+        text: 'dog',
+        direction: 'horizontal',
+        cells: [
+          { x: 4, y: 0 },
+          { x: 5, y: 0 },
+          { x: 6, y: 0 },
+        ],
+      },
+      {
+        text: 'bird',
+        direction: 'horizontal',
+        cells: [
+          { x: 0, y: 4 },
+          { x: 1, y: 4 },
+          { x: 2, y: 4 },
+          { x: 3, y: 4 },
+        ],
+      },
+      {
+        text: 'cat',
+        direction: 'vertical',
+        cells: [
+          { x: 0, y: 0 },
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+        ],
+      },
+      {
+        text: 'dog',
+        direction: 'vertical',
+        cells: [
+          { x: 4, y: 0 },
+          { x: 4, y: 1 },
+          { x: 4, y: 2 },
+        ],
+      },
     ])
   })
 
@@ -93,10 +227,42 @@ describe('findWords', () => {
       ['g', 'h', 'i'],
     ]
     expect(findWords(grid)).toEqual([
-      { text: 'abc', direction: 'horizontal' },
-      { text: 'ghi', direction: 'horizontal' },
-      { text: 'adg', direction: 'vertical' },
-      { text: 'cfi', direction: 'vertical' },
+      {
+        text: 'abc',
+        direction: 'horizontal',
+        cells: [
+          { x: 0, y: 0 },
+          { x: 1, y: 0 },
+          { x: 2, y: 0 },
+        ],
+      },
+      {
+        text: 'ghi',
+        direction: 'horizontal',
+        cells: [
+          { x: 0, y: 2 },
+          { x: 1, y: 2 },
+          { x: 2, y: 2 },
+        ],
+      },
+      {
+        text: 'adg',
+        direction: 'vertical',
+        cells: [
+          { x: 0, y: 0 },
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+        ],
+      },
+      {
+        text: 'cfi',
+        direction: 'vertical',
+        cells: [
+          { x: 2, y: 0 },
+          { x: 2, y: 1 },
+          { x: 2, y: 2 },
+        ],
+      },
     ])
   })
 })

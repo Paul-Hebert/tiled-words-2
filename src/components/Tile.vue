@@ -12,11 +12,11 @@ interface TileProps extends Omit<TileType, 'id'> {
   wasJustDropped?: boolean
   scale: number
   id?: string
+  foundCells?: Point[]
 }
 
 const props = defineProps<TileProps>()
 
-const tileDragBox = ref<SVGSVGElement | null>(null)
 const svgOutlinePath = computed(() => {
   return pointsToSvgPathData(outlineShape(props.grid), props.scale)
 })
@@ -45,6 +45,13 @@ const svgOutlinePath = computed(() => {
             <g v-if="!isShadow" class="cell-text-wrapper">
               <text
                 class="cell-text"
+                :class="{
+                  found: foundCells?.some(
+                    (foundCell) =>
+                      foundCell.x === cellIndex + position.x &&
+                      foundCell.y === rowIndex + position.y,
+                  ),
+                }"
                 :x="scale / 2"
                 :y="scale / 2"
                 :font-size="scale * 0.8"
@@ -65,7 +72,7 @@ const svgOutlinePath = computed(() => {
         y="0"
         :width="scale * grid[0].length"
         :height="scale * grid.length"
-        class="tile-drag-boxd"
+        class="tile-drag-box"
         :data-tile-id="id"
       />
       <rect
@@ -99,7 +106,7 @@ const svgOutlinePath = computed(() => {
 }
 
 .rotation-wrapper-background,
-.tile-drag-boxd {
+.tile-drag-box {
   pointer-events: none;
   opacity: 0;
 }
@@ -154,6 +161,11 @@ const svgOutlinePath = computed(() => {
   user-select: none;
   text-transform: uppercase;
   font-weight: 550;
+  transition: fill 0.2s ease-out;
+}
+
+.cell-text.found {
+  fill: #22c55e;
 }
 
 .cell-text-wrapper {

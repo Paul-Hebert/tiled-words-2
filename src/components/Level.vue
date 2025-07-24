@@ -69,18 +69,26 @@ const allWords = computed(() => [...props.words.vertical, ...props.words.horizon
 const foundWords = computed(() => {
   const foundWords = findWords(gridState.value)
 
-  return foundWords
-    .filter((word) => {
-      return (
-        props.words.vertical.some(
-          (verticalWord) => verticalWord.text === word.text && word.direction === 'vertical',
-        ) ||
-        props.words.horizontal.some(
-          (horizontalWord) => horizontalWord.text === word.text && word.direction === 'horizontal',
-        )
+  return foundWords.filter((word) => {
+    return (
+      props.words.vertical.some(
+        (verticalWord) => verticalWord.text === word.text && word.direction === 'vertical',
+      ) ||
+      props.words.horizontal.some(
+        (horizontalWord) => horizontalWord.text === word.text && word.direction === 'horizontal',
       )
-    })
-    .map((word) => word.text)
+    )
+  })
+})
+
+const foundWordCells = computed(() => {
+  const cells: Point[] = []
+
+  foundWords.value.forEach((word) => {
+    cells.push(...word.cells)
+  })
+
+  return cells
 })
 
 // Watch for new word discoveries and play success sound
@@ -268,7 +276,7 @@ onUnmounted(() => {
             v-for="word in words.horizontal"
             :key="word.text"
             :word="word"
-            :is-found="foundWords.includes(word.text)"
+            :is-found="foundWords.some((foundWord) => foundWord.text === word.text)"
           />
         </ul>
       </div>
@@ -280,7 +288,7 @@ onUnmounted(() => {
             v-for="word in words.vertical"
             :key="word.text"
             :word="word"
-            :is-found="foundWords.includes(word.text)"
+            :is-found="foundWords.some((foundWord) => foundWord.text === word.text)"
           />
         </ul>
       </div>
@@ -311,6 +319,7 @@ onUnmounted(() => {
           :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
           :is-selected="tile.id === currentTileId"
           :id="tile.id"
+          :found-cells="foundWordCells"
         />
       </svg>
 
