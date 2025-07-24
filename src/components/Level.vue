@@ -11,6 +11,7 @@ import { canPlaceTile } from '../../helpers/can-place-tile'
 import WordDisplay from './WordDisplay.vue'
 import { findWords } from '../../helpers/find-words'
 import { rotateTileInPlace } from '../../helpers/rotate-tile-in-place'
+import { findClosestTileCell } from '../../helpers/find-closest-tile-cell'
 import { useSound } from '@/composables/use-sound'
 
 const props = defineProps<{
@@ -27,6 +28,8 @@ const { playSound } = useSound()
 
 const boardGridScale = 10
 const boardViewboxSize = props.boardGridSize * boardGridScale
+const mouseThreshold = 1 // 1px threshold for precise mouse clicks
+const touchThreshold = 15 // 15px threshold for forgiving finger taps
 
 const tiles = ref(props.startingTiles)
 
@@ -53,11 +56,12 @@ const placementIsValid = computed(() => {
   if (!selectedTile.value || !shadowPosition.value) {
     return false
   }
-  return canPlaceTile(
+  const result = canPlaceTile(
     rotateGrid(selectedTile.value.grid, selectedTile.value.rotations),
     shadowPosition.value,
     gridState.value,
   )
+  return result.canPlace
 })
 
 const allWords = computed(() => [...props.words.vertical, ...props.words.horizontal])
@@ -98,6 +102,37 @@ const startDrag = (tileElement: SVGGElement, tileId: string, startDragPoint: Poi
   tapOrDragStartedTime.value = Date.now()
 }
 
+const handlePointerDown = (e: PointerEvent) => {
+  if (!boardElement.value) {
+    return
+  }
+
+  const point = { x: e.clientX, y: e.clientY }
+
+  // Use different thresholds based on input type
+  const threshold = e.pointerType === 'mouse' ? mouseThreshold : touchThreshold
+
+  // Find the closest tile cell within the threshold
+  const closestCell = findClosestTileCell(
+    point,
+    tiles.value,
+    threshold,
+    boardElement.value,
+    boardViewboxSize,
+    boardGridScale,
+  )
+
+  if (closestCell) {
+    // Find the tile element for the closest cell
+    const tileElement = document.querySelector(
+      `[data-tile-id="${closestCell.tile.id}"]`,
+    ) as SVGGElement | null
+    if (tileElement) {
+      startDrag(tileElement, closestCell.tile.id, point)
+    }
+  }
+}
+
 const handleMove = (position: Point) => {
   if (currentTileId.value === null || startingDragPoint?.value === null) {
     return
@@ -126,6 +161,8 @@ const handleMove = (position: Point) => {
     boardElement.value,
     currentTileElement.value,
     props.boardGridSize,
+    selectedTile.value!,
+    gridState.value,
   )
 }
 
@@ -178,14 +215,46 @@ const endDrag = async () => {
     emit('next-level')
   }
 }
+
+// Document event handlers
+const handleDocumentPointerMove = (e: PointerEvent) => {
+  handleMove({ x: e.clientX, y: e.clientY })
+}
+
+const handleDocumentPointerUp = () => {
+  endDrag()
+}
+
+const handleDocumentPointerLeave = () => {
+  if (currentTileId.value !== null) {
+    endDrag()
+  }
+}
+
+const handleVisibilityChange = () => {
+  if (currentTileId.value !== null && document.hidden) {
+    endDrag()
+  }
+}
+
+// Add and remove document event listeners
+onMounted(() => {
+  document.addEventListener('pointermove', handleDocumentPointerMove)
+  document.addEventListener('pointerup', handleDocumentPointerUp)
+  document.addEventListener('pointerleave', handleDocumentPointerLeave)
+  document.addEventListener('visibilitychange', handleVisibilityChange)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('pointermove', handleDocumentPointerMove)
+  document.removeEventListener('pointerup', handleDocumentPointerUp)
+  document.removeEventListener('pointerleave', handleDocumentPointerLeave)
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
+})
 </script>
 
 <template>
-  <div
-    class="container"
-    @pointermove="(e: PointerEvent) => handleMove({ x: e.clientX, y: e.clientY })"
-    @pointerup="endDrag"
-  >
+  <div class="container" @pointerdown="handlePointerDown">
     <div class="meta">
       <h1 class="theme">
         {{ theme }}
@@ -193,10 +262,10 @@ const endDrag = async () => {
       </h1>
 
       <div class="words-section">
-        <h2 class="words-header">Vertical words</h2>
+        <h2 class="words-header">Across</h2>
         <ul class="words">
           <WordDisplay
-            v-for="word in words.vertical"
+            v-for="word in words.horizontal"
             :key="word.text"
             :word="word"
             :is-found="foundWords.includes(word.text)"
@@ -205,10 +274,10 @@ const endDrag = async () => {
       </div>
 
       <div class="words-section">
-        <h2 class="words-header">Horizontal words</h2>
+        <h2 class="words-header">Down</h2>
         <ul class="words">
           <WordDisplay
-            v-for="word in words.horizontal"
+            v-for="word in words.vertical"
             :key="word.text"
             :word="word"
             :is-found="foundWords.includes(word.text)"
@@ -239,9 +308,9 @@ const endDrag = async () => {
           :scale="10"
           :rotations="tile.rotations"
           :was-just-dropped="tile.id === justDroppedTileId"
-          @tile-pointerdown="(data) => startDrag(data.tileElement, tile.id, data.startingDragPoint)"
           :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
           :is-selected="tile.id === currentTileId"
+          :id="tile.id"
         />
       </svg>
 
@@ -296,8 +365,9 @@ const endDrag = async () => {
   @media (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
     max-width: 1000px;
+    height: 100svh;
     gap: 2rem;
-    place-items: center;
+    place-content: center;
 
     .board-container {
       order: -1;
@@ -308,6 +378,7 @@ const endDrag = async () => {
 .meta {
   display: grid;
   gap: 1rem;
+  place-content: center;
 }
 
 .board-container {

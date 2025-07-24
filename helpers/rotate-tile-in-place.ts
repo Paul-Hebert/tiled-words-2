@@ -12,7 +12,8 @@ export function rotateTileInPlace(tile: Tile, gridState: Grid): Point | false {
   let rotatedGrid = rotateGrid(tile.grid, tile.rotations + 1)
 
   // Check if the rotated tile can still be placed at the current position
-  if (canPlaceTile(rotatedGrid, tile.position, gridState)) {
+  const currentPositionResult = canPlaceTile(rotatedGrid, tile.position, gridState)
+  if (currentPositionResult.canPlace) {
     return tile.position
   }
 
@@ -28,7 +29,8 @@ export function rotateTileInPlace(tile: Tile, gridState: Grid): Point | false {
     const positionsAtDistance = generatePositionsAtDistance(originalPosition, distance)
 
     for (const position of positionsAtDistance) {
-      if (canPlaceTile(rotatedGrid, position, gridState)) {
+      const positionResult = canPlaceTile(rotatedGrid, position, gridState)
+      if (positionResult.canPlace) {
         tile.position = position
         return position
       }

@@ -11,15 +11,12 @@ interface TileProps extends Omit<TileType, 'id'> {
   isSelected?: boolean
   wasJustDropped?: boolean
   scale: number
+  id?: string
 }
 
 const props = defineProps<TileProps>()
 
-const emit = defineEmits<{
-  (e: 'tile-pointerdown', data: { tileElement: SVGSVGElement; startingDragPoint: Point }): void
-}>()
-
-const tileBackground = ref<SVGSVGElement | null>(null)
+const tileDragBox = ref<SVGSVGElement | null>(null)
 const svgOutlinePath = computed(() => {
   return pointsToSvgPathData(outlineShape(props.grid), props.scale)
 })
@@ -42,25 +39,7 @@ const svgOutlinePath = computed(() => {
     <g class="rotation-wrapper">
       <template v-for="(row, rowIndex) in grid" :key="rowIndex">
         <template class="cell" v-for="(cell, cellIndex) in row" :key="cellIndex">
-          <g
-            v-if="cell !== null"
-            class="cell"
-            :style="`--x: ${cellIndex}; --y: ${rowIndex}`"
-            @pointerdown.prevent="
-              (e: PointerEvent) => {
-                if (!tileBackground) {
-                  return
-                }
-
-                const startingDragPoint = { x: e.clientX, y: e.clientY }
-
-                emit('tile-pointerdown', {
-                  tileElement: tileBackground,
-                  startingDragPoint,
-                })
-              }
-            "
-          >
+          <g v-if="cell !== null" class="cell" :style="`--x: ${cellIndex}; --y: ${rowIndex}`">
             <rect :x="0" :y="0" :width="scale" :height="scale" class="cell-background" />
 
             <g v-if="!isShadow" class="cell-text-wrapper">
@@ -86,8 +65,8 @@ const svgOutlinePath = computed(() => {
         y="0"
         :width="scale * grid[0].length"
         :height="scale * grid.length"
-        class="tile-background"
-        ref="tileBackground"
+        class="tile-drag-boxd"
+        :data-tile-id="id"
       />
       <rect
         x="-10"
@@ -120,7 +99,7 @@ const svgOutlinePath = computed(() => {
 }
 
 .rotation-wrapper-background,
-.tile-background {
+.tile-drag-boxd {
   pointer-events: none;
   opacity: 0;
 }
