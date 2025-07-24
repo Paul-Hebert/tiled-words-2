@@ -190,8 +190,8 @@ const endDrag = async () => {
     tapOrDragStartedTime.value && Date.now() - tapOrDragStartedTime.value > 300
   const farEnoughForDrag =
     dragAdjustment.value &&
-    Math.abs(dragAdjustment.value.x) > 10 &&
-    Math.abs(dragAdjustment.value.y) > 10
+    Math.abs(dragAdjustment.value.x) > 15 &&
+    Math.abs(dragAdjustment.value.y) > 15
 
   if (!longEnoughForDrag && !farEnoughForDrag) {
     handleTileTap(tile.id)
@@ -363,14 +363,18 @@ onUnmounted(() => {
   margin: 0 auto;
 
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     max-width: 1000px;
     height: 100svh;
     gap: 2rem;
-    place-content: center;
+    align-items: center;
 
     .board-container {
       order: -1;
+    }
+
+    .meta {
+      flex-basis: 33%;
     }
   }
 }
