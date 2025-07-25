@@ -97,6 +97,7 @@ const levels = [
       vertical: [
         { text: 'whale', hint: 'A _____ of a time!' },
         { text: 'seal', hint: 'A sea dog' },
+        { text: 'ray', hint: 'Sting, Manta...' },
       ],
       horizontal: [
         { text: 'shark', hint: 'Apex predator' },

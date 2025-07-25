@@ -13,13 +13,9 @@ A word game where you reconstruct crosswords out of tiles.
 ## UI Design
 
 - Better responsive layout
-- Better word/hint display
 - Micro-interactions for finding word, completing level
-- Highlight "found words" in grid (green?)
 - Better sounds
 - Favicon + Logo
-- If a user has an invalid drop, try adjacent squares
-- If a user taps on grid (but not cell) try to get adjacent cell
 
 ## Code quality
 
@@ -39,4 +35,4 @@ A word game where you reconstruct crosswords out of tiles.
 
 ## Lisa feedback
 
-- Lock together "correct" tiles
+- Lock together "correct" tiles - or alternate approach for shifting all tiles...
