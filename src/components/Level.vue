@@ -22,6 +22,7 @@ const props = defineProps<{
     vertical: Word[]
     horizontal: Word[]
   }
+  nextLevelId?: string
 }>()
 
 const { playSound } = useSound()
@@ -291,6 +292,21 @@ onUnmounted(() => {
             :is-found="foundWords.some((foundWord) => foundWord.text === word.text)"
           />
         </ul>
+      </div>
+
+      <div v-if="foundWords.length === allWords.length" class="completion-section">
+        <div class="completion-message">
+          <h3>🎉 Level Complete!</h3>
+          <p>All words found!</p>
+        </div>
+        <div v-if="nextLevelId" class="next-level-link">
+          <router-link :to="`/level/${nextLevelId}`" class="next-level-btn">
+            Next Level →
+          </router-link>
+        </div>
+        <div v-else class="next-level-link">
+          <p class="win-message">🎉 Congratulations! You've completed all levels!</p>
+        </div>
       </div>
     </div>
 
