@@ -305,12 +305,13 @@ onUnmounted(() => {
 
   @media (min-width: 768px) {
     display: flex;
-    max-width: 1000px;
+    max-width: 1200px;
     gap: 2rem;
     align-items: center;
 
     .board-container {
       order: -1;
+      flex-basis: 66%;
     }
 
     .meta {
