@@ -323,6 +323,6 @@ onUnmounted(() => {
 .meta {
   display: grid;
   gap: 1rem;
-  place-content: center;
+  align-content: center;
 }
 </style>
