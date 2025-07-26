@@ -1,4 +1,4 @@
-import type { Grid, Direction } from '../src/types'
+import type { Grid } from '../src/types'
 import { toRaw } from 'vue'
 
 /**
