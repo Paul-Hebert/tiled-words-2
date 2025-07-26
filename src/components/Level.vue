@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import type { Point, Tile as TileType, Word } from '../types'
-import BackgroundGrid from './BackgroundGrid.vue'
-import Tile from './Tile.vue'
 import { getBoardScaledDelta } from '../../helpers/get-board-scaled-delta'
 import { getShadowPosition } from '../../helpers/get-shadow-position'
 import { rotateGrid } from '../../helpers/rotate-grid'
 import { computeGridState } from '../../helpers/compute-grid-state'
 import { canPlaceTile } from '../../helpers/can-place-tile'
-import WordDisplay from './WordDisplay.vue'
 import { findWords } from '../../helpers/find-words'
 import { rotateTileInPlace } from '../../helpers/rotate-tile-in-place'
 import { findClosestTileCell } from '../../helpers/find-closest-tile-cell'
 import { useSound } from '@/composables/use-sound'
+import Button from './Button.vue'
+import { ArrowRightIcon } from 'lucide-vue-next'
+import Board from './Board.vue'
+import WordsSection from './WordsSection.vue'
 
 const props = defineProps<{
   startingTiles: TileType[]
@@ -22,7 +23,7 @@ const props = defineProps<{
     vertical: Word[]
     horizontal: Word[]
   }
-  nextLevelId?: string
+  nextLevelId?: number
 }>()
 
 const { playSound } = useSound()
@@ -35,7 +36,7 @@ const touchThreshold = 15 // 15px threshold for forgiving finger taps
 const tiles = ref(props.startingTiles)
 
 const selectedTile = computed(() => {
-  return tiles.value.find((tile) => tile.id === currentTileId.value)
+  return tiles.value.find((tile) => tile.id === currentTileId.value) || null
 })
 
 const otherTiles = computed(() => {
@@ -46,10 +47,12 @@ const currentTileId = ref<string | null>(null)
 const justDroppedTileId = ref<string | null>(null)
 const startingDragPoint = ref<Point | null>(null)
 const dragAdjustment = ref<Point | null>(null)
-const boardElement = ref<SVGSVGElement | null>(null)
+const boardComponent = ref<InstanceType<typeof Board> | null>(null)
 const currentTileElement = ref<SVGGElement | null>(null)
 const shadowPosition = ref<Point | null>(null)
 const tapOrDragStartedTime = ref<number | null>(null)
+
+const boardElement = computed(() => boardComponent.value?.backgroundGridElement)
 
 const gridState = computed(() => computeGridState(otherTiles.value, props.boardGridSize))
 
@@ -80,16 +83,6 @@ const foundWords = computed(() => {
       )
     )
   })
-})
-
-const foundWordCells = computed(() => {
-  const cells: Point[] = []
-
-  foundWords.value.forEach((word) => {
-    cells.push(...word.cells)
-  })
-
-  return cells
 })
 
 // Watch for new word discoveries and play success sound
@@ -143,27 +136,21 @@ const handlePointerDown = (e: PointerEvent) => {
 }
 
 const handleMove = (position: Point) => {
-  if (currentTileId.value === null || startingDragPoint?.value === null) {
+  if (
+    currentTileId.value === null ||
+    startingDragPoint?.value === null ||
+    !boardElement.value ||
+    !currentTileElement.value
+  ) {
     return
   }
 
-  if (!boardElement.value) {
-    return
-  }
-
-  // Calculate drag adjustment using helper function
-  const scaledDelta = getBoardScaledDelta(
+  dragAdjustment.value = getBoardScaledDelta(
     position,
     startingDragPoint.value,
     boardElement.value,
     boardViewboxSize,
   )
-
-  dragAdjustment.value = scaledDelta
-
-  if (!currentTileElement.value) {
-    return
-  }
 
   // Calculate shadow position using helper function
   shadowPosition.value = getShadowPosition(
@@ -267,92 +254,33 @@ onUnmounted(() => {
     <div class="meta">
       <h1 class="theme">
         {{ theme }}
-        <!-- ({{ foundWords.length }}/{{ allWords.length }} found) -->
       </h1>
 
-      <div class="words-section">
-        <h2 class="words-header">Across</h2>
-        <ul class="words">
-          <WordDisplay
-            v-for="word in words.horizontal"
-            :key="word.text"
-            :word="word"
-            :is-found="foundWords.some((foundWord) => foundWord.text === word.text)"
-          />
-        </ul>
-      </div>
+      <WordsSection :words="words" :found-words="foundWords.map((word) => word.text)" />
 
-      <div class="words-section">
-        <h2 class="words-header">Down</h2>
-        <ul class="words">
-          <WordDisplay
-            v-for="word in words.vertical"
-            :key="word.text"
-            :word="word"
-            :is-found="foundWords.some((foundWord) => foundWord.text === word.text)"
-          />
-        </ul>
-      </div>
-
-      <div v-if="foundWords.length === allWords.length" class="completion-section">
-        <div class="completion-message">
-          <h3>🎉 Level Complete!</h3>
-          <p>All words found!</p>
-        </div>
-        <div v-if="nextLevelId" class="next-level-link">
-          <router-link :to="`/level/${nextLevelId}`" class="next-level-btn">
-            Next Level →
-          </router-link>
-        </div>
-        <div v-else class="next-level-link">
-          <p class="win-message">🎉 Congratulations! You've completed all levels!</p>
-        </div>
-      </div>
+      <template v-if="foundWords.length === allWords.length">
+        <Button v-if="nextLevelId" :href="`/level/${nextLevelId}`" class="next-level-btn">
+          Next Level
+          <ArrowRightIcon aria-hidden="true" width="16" height="16" />
+        </Button>
+        <p v-else class="win-message">🎉 Congratulations! You've completed all levels!</p>
+      </template>
     </div>
 
-    <div class="board-container">
-      <svg
-        class="board"
-        :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`"
-        ref="boardElement"
-      >
-        <BackgroundGrid :size="boardGridSize" :scale="boardGridScale" />
-      </svg>
-
-      <svg
-        class="board"
-        :class="{ 'selected-container': tile.id === currentTileId }"
-        :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`"
-        v-for="tile in tiles"
-      >
-        <Tile
-          :key="tile.id"
-          :position="tile.position"
-          :grid="tile.grid"
-          :scale="10"
-          :rotations="tile.rotations"
-          :was-just-dropped="tile.id === justDroppedTileId"
-          :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
-          :is-selected="tile.id === currentTileId"
-          :id="tile.id"
-          :found-cells="foundWordCells"
-        />
-      </svg>
-
-      <svg class="board shadow-container" :viewBox="`0 0 ${boardViewboxSize} ${boardViewboxSize}`">
-        <Tile
-          v-if="selectedTile && shadowPosition"
-          :key="`${selectedTile.id}-shadow`"
-          :position="shadowPosition"
-          :grid="selectedTile.grid"
-          :scale="10"
-          :rotations="selectedTile.rotations"
-          :drag-adjustment="null"
-          :is-shadow="true"
-          :is-invalid="!placementIsValid"
-        />
-      </svg>
-    </div>
+    <Board
+      :board-viewbox-size="boardViewboxSize"
+      :board-grid-size="boardGridSize"
+      :board-grid-scale="boardGridScale"
+      :current-tile-id="currentTileId"
+      :tiles="tiles"
+      :just-dropped-tile-id="justDroppedTileId"
+      :drag-adjustment="dragAdjustment"
+      :selected-tile="selectedTile"
+      :shadow-position="shadowPosition"
+      :placement-is-valid="placementIsValid"
+      :found-words="foundWords"
+      ref="boardComponent"
+    />
   </div>
 </template>
 
@@ -363,18 +291,6 @@ onUnmounted(() => {
   margin: 0;
   font-family: var(--font-serif);
   line-height: 1.2;
-}
-
-.words-header {
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  margin: 0;
-}
-
-.words-section {
-  display: grid;
 }
 
 .container {
@@ -408,38 +324,5 @@ onUnmounted(() => {
   display: grid;
   gap: 1rem;
   place-content: center;
-}
-
-.board-container {
-  display: grid;
-  grid-template-areas: 'content';
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  width: 100%;
-  touch-action: none;
-}
-
-.board {
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  margin: 0 auto;
-  overflow: visible;
-  /* TODO: refine... */
-  grid-area: content;
-  position: relative;
-  pointer-events: none;
-}
-
-.shadow-container {
-  z-index: 1;
-}
-
-.selected-container {
-  z-index: 2;
-}
-
-.words {
-  padding-inline: 1em;
-  padding-block: 0;
 }
 </style>

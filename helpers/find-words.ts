@@ -1,10 +1,4 @@
-import type { Grid } from '../src/types'
-
-type WordResult = {
-  text: string
-  direction: 'vertical' | 'horizontal'
-  cells: Array<{ x: number; y: number }>
-}
+import type { Grid, WordResult } from '../src/types'
 
 /**
  * Finds all words in a grid by iterating through rows and columns

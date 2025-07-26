@@ -39,19 +39,22 @@ const svgOutlinePath = computed(() => {
     <g class="rotation-wrapper">
       <template v-for="(row, rowIndex) in grid" :key="rowIndex">
         <template class="cell" v-for="(cell, cellIndex) in row" :key="cellIndex">
-          <g v-if="cell !== null" class="cell" :style="`--x: ${cellIndex}; --y: ${rowIndex}`">
+          <g
+            v-if="cell !== null"
+            class="cell"
+            :class="{
+              found: foundCells?.some(
+                (foundCell) =>
+                  foundCell.x === cellIndex + position.x && foundCell.y === rowIndex + position.y,
+              ),
+            }"
+            :style="`--x: ${cellIndex}; --y: ${rowIndex}`"
+          >
             <rect :x="0" :y="0" :width="scale" :height="scale" class="cell-background" />
 
             <g v-if="!isShadow" class="cell-text-wrapper">
               <text
                 class="cell-text"
-                :class="{
-                  found: foundCells?.some(
-                    (foundCell) =>
-                      foundCell.x === cellIndex + position.x &&
-                      foundCell.y === rowIndex + position.y,
-                  ),
-                }"
                 :x="scale / 2"
                 :y="scale / 2"
                 :font-size="scale * 0.8"
@@ -145,7 +148,14 @@ const svgOutlinePath = computed(() => {
   fill: #fff;
   stroke: #ddd;
   stroke-width: 0.5px;
+  transition:
+    fill 0.2s ease-out,
+    stroke 0.2s ease-out;
 }
+
+/* .found .cell-background {
+  fill: #f8fff6;
+} */
 
 .shadow .cell-background {
   stroke: #000;
@@ -164,7 +174,7 @@ const svgOutlinePath = computed(() => {
   transition: fill 0.2s ease-out;
 }
 
-.cell-text.found {
+.found .cell-text {
   fill: #22c55e;
 }
 

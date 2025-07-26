@@ -1,16 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import Button from '@/components/Button.vue'
+import { levels } from '@/levels'
+import { ArrowLeftIcon } from 'lucide-vue-next'
 </script>
 
 <template>
   <div class="home-container">
     <div class="content">
-      <h1 class="title">Tiled Words</h1>
-      <p class="subtitle">Reconstruct crosswords out of tiles</p>
-      <Button href="/instructions">Get Started</Button>
+      <h1 class="title">Levels</h1>
 
-      <router-link to="/levels" style="text-align: center">View Levels</router-link>
+      <ol class="level-list">
+        <li v-for="(level, index) in levels" :key="level.theme" class="level-item">
+          <router-link :to="`/level/${index + 1}`" class="level-link">
+            {{ level.theme }}
+          </router-link>
+        </li>
+      </ol>
+
+      <router-link to="/">
+        <ArrowLeftIcon aria-hidden="true" width="16" height="16" />
+        Go Back
+      </router-link>
     </div>
   </div>
 </template>
@@ -37,14 +46,6 @@ import Button from '@/components/Button.vue'
   margin: 0 0 0.5rem 0;
   font-family: var(--font-serif);
   line-height: 1.2;
-}
-
-.subtitle {
-  font-size: 1.2rem;
-  color: #666;
-}
-
-.unstyled-button {
 }
 
 .level-list {

@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MuteToggleButton from './components/MuteToggleButton.vue'
+</script>
 
 <template>
   <div class="app-container">
+    <MuteToggleButton />
     <RouterView />
   </div>
 </template>
