@@ -14,16 +14,9 @@ const { isMuted, toggleMuted } = useSound()
 </template>
 
 <style scoped>
-.mute-toggle-btn {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 1000;
-}
-
 .icon {
   width: 1.5rem;
   height: 1.5rem;
-  color: #333;
+  stroke: currentColor;
 }
 </style>

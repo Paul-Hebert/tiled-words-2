@@ -7,13 +7,12 @@ A word game where you reconstruct crosswords out of tiles.
 ## Major Features
 
 - More levels
-- Instructions
-- Main screen (New game, continue, etc.)
 
 ## UI Design
 
+- "Header" design with home button
 - Better responsive layout
-- Micro-interactions for finding word, completing level
+- Better micro-interactions for finding word, completing level
 - Better sounds
 - Favicon + Logo
 
@@ -26,13 +25,16 @@ A word game where you reconstruct crosswords out of tiles.
 - Refactors
   - Simplify shadow position + can place tile
   - Abstract shared parts of shadow position and the rotate tile in place helper
+  - Replace `while` loop in getShadowPosition: have `canPlaceTile` return the exact offset required
 
 ## Bugs
 
 - Sounds not working right on iOS
 - Prevent zoom in iOS on double tap
 - Prevent "back swipe" in iOS
+- Safari: clicking selects text
 
 ## Lisa feedback
 
 - Lock together "correct" tiles - or alternate approach for shifting all tiles...
+- Option to get bonus hints

@@ -306,7 +306,6 @@ onUnmounted(() => {
   @media (min-width: 768px) {
     display: flex;
     max-width: 1000px;
-    height: 100svh;
     gap: 2rem;
     align-items: center;
 

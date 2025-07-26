@@ -11,6 +11,10 @@ import Button from '@/components/Button.vue'
       <Button href="/instructions">Get Started</Button>
 
       <router-link to="/levels" style="text-align: center">View Levels</router-link>
+
+      <hr />
+
+      <p><a href="https://paulmakeswebsites.com">Made by Paul Hebert</a></p>
     </div>
   </div>
 </template>
@@ -37,6 +41,7 @@ import Button from '@/components/Button.vue'
   margin: 0 0 0.5rem 0;
   font-family: var(--font-serif);
   line-height: 1.2;
+  text-align: center;
 }
 
 .subtitle {
@@ -61,5 +66,14 @@ import Button from '@/components/Button.vue'
 .level-link {
   color: inherit;
   font-weight: inherit;
+}
+
+hr {
+  opacity: 0.2;
+}
+
+p {
+  text-align: center;
+  color: #666;
 }
 </style>
