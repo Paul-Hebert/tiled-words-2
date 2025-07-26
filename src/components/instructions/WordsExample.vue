@@ -29,7 +29,7 @@ const animateTiles = () => {
     } else {
       foundWords.value = foundWords.value.filter((word) => word !== 'goose')
     }
-  }, 1000)
+  }, 2000)
 }
 
 onMounted(() => {
@@ -52,9 +52,12 @@ onUnmounted(() => {
 <style scoped>
 .words-example {
   border: 3px dashed var(--color-background-secondary);
+  background-color: var(--color-background-tertiary);
   padding: 1rem;
   display: grid;
   flex-grow: 1;
+  align-items: start;
+  gap: 0.5rem;
 }
 
 .words-example-inner {

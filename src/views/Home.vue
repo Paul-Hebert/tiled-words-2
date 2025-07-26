@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import Button from '@/components/Button.vue'
+import LogoExample from '@/components/instructions/LogoExample.vue'
 </script>
 
 <template>
   <div class="home-container">
     <div class="content">
-      <h1 class="title">Tiled Words</h1>
+      <div role="heading" aria-level="1" aria-label="Tiled Words">
+        <LogoExample />
+      </div>
       <p class="subtitle">Reconstruct crosswords out of tiles</p>
       <Button href="/instructions">Get Started</Button>
 
@@ -33,15 +35,6 @@ import Button from '@/components/Button.vue'
 .content {
   display: grid;
   gap: 1rem;
-}
-
-.title {
-  font-size: 3rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
-  font-family: var(--font-serif);
-  line-height: 1.2;
-  text-align: center;
 }
 
 .subtitle {

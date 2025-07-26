@@ -39,11 +39,13 @@ defineProps<{
 
 <style scoped>
 .words-header {
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.02em;
   margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-text-muted);
 }
 
 .words-section {

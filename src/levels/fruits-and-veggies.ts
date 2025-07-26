@@ -7,7 +7,7 @@ export const fruitsAndVeggies: Level = {
   words: {
     vertical: [
       { text: 'garlic', hint: 'Vampire protection' },
-      { text: 'berries', hint: 'Black and blue...' },
+      { text: 'berries', hint: 'Black and blue... (plural)' },
     ],
     horizontal: [
       { text: 'cabbage', hint: 'Sauerkraut ingredient' },

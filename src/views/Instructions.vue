@@ -50,7 +50,6 @@ import WordsExample from '@/components/instructions/WordsExample.vue'
   font-weight: 700;
   margin: 0;
   font-family: var(--font-serif);
-  line-height: 1.2;
 
   @media (min-width: 800px) {
     text-align: center;
@@ -59,9 +58,6 @@ import WordsExample from '@/components/instructions/WordsExample.vue'
 
 .instructions-list {
   font-size: 1.2rem;
-  line-height: 1.6;
-  padding-left: 1.5rem;
-
   list-style: none;
   padding: 0;
   display: grid;
@@ -87,11 +83,6 @@ import WordsExample from '@/components/instructions/WordsExample.vue'
   @media (min-width: 800px) {
     text-align: center;
   }
-}
-
-.example {
-  width: 100%;
-  display: block;
 }
 
 .go-button {

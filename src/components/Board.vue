@@ -16,6 +16,7 @@ const props = defineProps<{
   shadowPosition: Point | null
   placementIsValid: boolean
   foundWords: WordResult[]
+  notInteractive?: boolean
 }>()
 
 const backgroundGridElement = ref<SVGSVGElement | null>(null)
@@ -62,6 +63,7 @@ const foundWordCells = computed(() => {
         :is-selected="tile.id === currentTileId"
         :id="tile.id"
         :found-cells="foundWordCells"
+        :not-interactive="notInteractive"
       />
     </svg>
 

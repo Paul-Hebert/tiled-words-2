@@ -19,21 +19,39 @@ html {
   --font-sans: 'Source Sans 3', sans-serif;
   --font-serif: 'Source Serif 4', serif;
 
-  --hue-interactive: 210;
-  --hue-text: 0;
-  --hue-success: 141;
+  --hue-theme: 210;
+
+  --hue-interactive: var(--hue-theme);
+  --hue-success: var(--hue-theme);
   --hue-invalid: 0;
 
-  --color-text: hsl(var(--hue-text), 0%, 20%);
-  --color-text-muted: hsl(var(--hue-text), 0%, 40%);
+  --color-text: hsl(var(--hue-theme), 100%, 10%);
+  --color-text-muted: hsl(var(--hue-theme), 20%, 40%);
 
-  --color-background: hsl(0, 0%, 100%);
-  --color-background-secondary: hsl(0, 0%, 92%);
+  --color-background: hsl(var(--hue-theme), 20%, 99%);
+  --color-background-secondary: hsl(var(--hue-theme), 20%, 90%);
+  --color-background-tertiary: hsl(var(--hue-theme), 20%, 98%);
 
   --color-interactive: hsl(var(--hue-interactive), 100%, 40%);
   --color-interactive-muted: hsl(var(--hue-interactive), 100%, 80%);
 
-  --color-success: hsl(var(--hue-success), 71%, 48%);
+  --color-success: hsl(var(--hue-theme), 71%, 48%);
 
   --color-invalid: hsl(0, 100%, 50%);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  margin: 0;
+}
+
+a {
+  color: var(--color-interactive);
 }

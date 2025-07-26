@@ -61,7 +61,7 @@ const animateTiles = () => {
     } else {
       foundWords.value = []
     }
-  }, 1000)
+  }, 2000)
 }
 
 onMounted(() => {
@@ -89,6 +89,7 @@ onUnmounted(() => {
       :placement-is-valid="true"
       :found-words="foundWords"
       just-dropped-tile-id="demo-tile-1"
+      :not-interactive="true"
     />
   </div>
 </template>

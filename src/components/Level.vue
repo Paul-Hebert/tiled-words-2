@@ -287,10 +287,6 @@ onUnmounted(() => {
 <style scoped>
 .theme {
   font-size: 2rem;
-  font-weight: 700;
-  margin: 0;
-  font-family: var(--font-serif);
-  line-height: 1.2;
 }
 
 .container {

@@ -13,6 +13,7 @@ interface TileProps extends Omit<TileType, 'id'> {
   scale: number
   id?: string
   foundCells?: Point[]
+  notInteractive?: boolean
 }
 
 const props = defineProps<TileProps>()
@@ -31,6 +32,7 @@ const svgOutlinePath = computed(() => {
         invalid: isInvalid,
         selected: isSelected,
         'was-just-dropped': wasJustDropped,
+        'not-interactive': notInteractive,
       },
     ]"
     :style="`--x: ${position.x}; --y: ${position.y}; --scale: ${scale}px;--drag-x: ${dragAdjustment?.x || 0}px; --drag-y: ${dragAdjustment?.y || 0}px; --rotations: ${rotations};`"
@@ -142,6 +144,10 @@ const svgOutlinePath = computed(() => {
 
 .selected .cell {
   cursor: grabbing;
+}
+
+.not-interactive .cell {
+  cursor: default;
 }
 
 .cell-background {

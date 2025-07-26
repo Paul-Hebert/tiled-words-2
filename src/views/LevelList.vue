@@ -42,10 +42,6 @@ import { ArrowLeftIcon } from 'lucide-vue-next'
 
 .title {
   font-size: 3rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
-  font-family: var(--font-serif);
-  line-height: 1.2;
 }
 
 .level-list {
