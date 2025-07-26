@@ -46,10 +46,7 @@ import Button from '@/components/Button.vue'
 
 .subtitle {
   font-size: 1.2rem;
-  color: #666;
-}
-
-.unstyled-button {
+  color: var(--color-text-muted);
 }
 
 .level-list {
@@ -74,6 +71,6 @@ hr {
 
 p {
   text-align: center;
-  color: #666;
+  color: var(--color-text-muted);
 }
 </style>

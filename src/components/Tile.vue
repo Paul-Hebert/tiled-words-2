@@ -129,7 +129,7 @@ const svgOutlinePath = computed(() => {
 }
 
 .outline {
-  stroke: #999;
+  stroke: var(--color-text-muted);
   stroke-width: 0.5px;
   fill: none;
 }
@@ -145,8 +145,8 @@ const svgOutlinePath = computed(() => {
 }
 
 .cell-background {
-  fill: #fff;
-  stroke: #ddd;
+  fill: var(--color-background);
+  stroke: var(--color-background-secondary);
   stroke-width: 0.5px;
   transition:
     fill 0.2s ease-out,
@@ -158,13 +158,13 @@ const svgOutlinePath = computed(() => {
 } */
 
 .shadow .cell-background {
-  stroke: #000;
-  fill: #000;
+  stroke: var(--color-text);
+  fill: var(--color-text);
 }
 
 .invalid .cell-background {
-  stroke: #f00;
-  fill: #f00;
+  stroke: var(--color-invalid);
+  fill: var(--color-invalid);
 }
 
 .cell-text {
@@ -175,7 +175,7 @@ const svgOutlinePath = computed(() => {
 }
 
 .found .cell-text {
-  fill: #22c55e;
+  fill: var(--color-success);
 }
 
 .cell-text-wrapper {

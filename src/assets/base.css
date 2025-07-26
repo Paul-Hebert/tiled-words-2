@@ -12,10 +12,28 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #333;
+  color: var(--color-text);
 }
 
 :root {
   --font-sans: 'Source Sans 3', sans-serif;
   --font-serif: 'Source Serif 4', serif;
+
+  --hue-interactive: 210;
+  --hue-text: 0;
+  --hue-success: 141;
+  --hue-invalid: 0;
+
+  --color-text: hsl(var(--hue-text), 0%, 20%);
+  --color-text-muted: hsl(var(--hue-text), 0%, 40%);
+
+  --color-background: hsl(0, 0%, 100%);
+  --color-background-secondary: hsl(0, 0%, 92%);
+
+  --color-interactive: hsl(var(--hue-interactive), 100%, 40%);
+  --color-interactive-muted: hsl(var(--hue-interactive), 100%, 80%);
+
+  --color-success: hsl(var(--hue-success), 71%, 48%);
+
+  --color-invalid: hsl(0, 100%, 50%);
 }

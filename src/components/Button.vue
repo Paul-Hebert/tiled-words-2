@@ -18,7 +18,7 @@ defineProps<{
   --translation: 0.25em;
   --border-radius: 0.5em;
 
-  color: hsl(210, 100%, 40%);
+  color: var(--color-interactive);
   background: none;
   border: none;
   appearance: none;
@@ -60,8 +60,8 @@ defineProps<{
 }
 
 .button-inner {
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--color-background);
+  border: 1px solid var(--color-background-secondary);
   border-radius: inherit;
   translate: 0 calc(var(--translation) * -1);
   transition: translate 0.1s ease-out;
@@ -78,12 +78,12 @@ defineProps<{
 
 .button::before {
   content: '';
-  background: #ddd;
+  background: var(--color-background-secondary);
   position: absolute;
   inset: 0;
 }
 
 .button:focus-visible .button-inner {
-  outline: 3px solid hsl(210, 100%, 40%);
+  outline: 3px solid var(--color-interactive);
 }
 </style>

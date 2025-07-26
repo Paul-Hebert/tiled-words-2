@@ -51,7 +51,6 @@ defineProps<{
 }
 
 .words {
-  padding-inline: 1em;
-  padding-block: 0;
+  padding: 0;
 }
 </style>

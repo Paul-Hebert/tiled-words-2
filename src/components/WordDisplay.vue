@@ -32,7 +32,7 @@ const props = defineProps<{
 
 .found {
   /* text-decoration: line-through; */
-  color: #22c55e;
+  color: var(--color-success);
   font-weight: 600;
 }
 
@@ -63,7 +63,7 @@ li {
   transition-property: opacity, stroke-dashoffset;
   transition-duration: 0.2s, 0.4s;
   transition-timing-function: ease-out;
-  stroke: #fff;
+  stroke: var(--color-background);
   z-index: 1;
   scale: 0.65;
   stroke-width: 4;

@@ -14,12 +14,12 @@ defineProps<{ size: number; scale: number }>()
 
 <style scoped>
 line {
-  stroke: #fff;
+  stroke: var(--color-background);
   stroke-width: 0.5;
   stroke-linecap: round;
 }
 
 rect {
-  fill: #eee;
+  fill: var(--color-background-secondary);
 }
 </style>

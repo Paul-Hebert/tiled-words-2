@@ -51,8 +51,7 @@ onUnmounted(() => {
 
 <style scoped>
 .words-example {
-  border: 3px dashed #eee;
-  background-color: #f9f9f9;
+  border: 3px dashed var(--color-background-secondary);
   padding: 1rem;
   display: grid;
   flex-grow: 1;
