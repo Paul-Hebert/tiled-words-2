@@ -8,7 +8,7 @@ import WordsExample from '@/components/instructions/WordsExample.vue'
 <template>
   <div class="instructions-container">
     <div class="content">
-      <h1 class="title">Instructions</h1>
+      <h1 class="title">How to Play</h1>
 
       <ol class="instructions-list">
         <li class="instruction-item">

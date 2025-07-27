@@ -27,7 +27,6 @@ const props = defineProps<{
   align-items: baseline;
   column-gap: 0.5ch;
   font-size: 1.25rem;
-  font-family: var(--font-serif);
   transition-property: color, font-weight;
   transition-duration: 0.2s;
   transition-timing-function: ease-out;
