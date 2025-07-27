@@ -47,9 +47,6 @@ import WordsExample from '@/components/instructions/WordsExample.vue'
 
 .title {
   font-size: 3rem;
-  font-weight: 700;
-  margin: 0;
-  font-family: var(--font-serif);
 
   @media (min-width: 800px) {
     text-align: center;
@@ -76,9 +73,9 @@ import WordsExample from '@/components/instructions/WordsExample.vue'
 }
 
 .instruction-item-title {
-  font-weight: 700;
-  font-family: var(--font-serif);
   font-size: 1.5rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
 
   @media (min-width: 800px) {
     text-align: center;
