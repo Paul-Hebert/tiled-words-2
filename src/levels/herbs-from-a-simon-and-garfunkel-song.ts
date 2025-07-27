@@ -10,7 +10,7 @@ export const herbsFromASimonAndGarfunkelSong: Level = {
       { text: 'thyme', hint: 'Tracked with a clock' },
     ],
     horizontal: [
-      { text: 'parsley', hint: "Chimichurri's main ingredient" },
+      { text: 'parsley', hint: 'Chimichurri ingredient' },
       { text: 'rosemary', hint: "A woman's name" },
     ],
   },
