@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Board from '@/components/Board.vue'
-import type { Tile } from '@/types'
+import type { Tile, WordResult } from '@/types'
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const currentTileId = ref<string | null>('demo-tile-1')
