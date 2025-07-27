@@ -25,7 +25,7 @@ const props = defineProps<{
 .word-display {
   display: flex;
   align-items: baseline;
-  gap: 0.5ch;
+  column-gap: 0.5ch;
   font-size: 1.25rem;
   font-family: var(--font-serif);
   transition-property: color, font-weight;
@@ -36,12 +36,12 @@ const props = defineProps<{
 .text {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25em;
 }
 
 .hint {
   font-weight: 500;
   font-family: var(--font-serif);
+  margin-right: 0.5ch;
 }
 
 .count {
