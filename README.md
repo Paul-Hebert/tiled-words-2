@@ -38,3 +38,15 @@ A word game where you reconstruct crosswords out of tiles.
 
 - Lock together "correct" tiles - or alternate approach for shifting all tiles...
 - Option to get bonus hints
+
+## Before sharing with beta playtesters
+
+- Fix or disable sounds
+- Improve responsive layout
+  - overflow on landscape iPad
+  - unused space on laptop
+  - Overflow on iOS
+- Improve iOS gesture issues (enable scrolling, avoid zooming, etc.)
+- Scroll to top on page navigation
+- Link instructions from nav (in modal?)
+- Better "next level"/winning UI
