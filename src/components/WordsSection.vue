@@ -40,7 +40,7 @@ defineProps<{
 <style scoped>
 .words-header {
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 650;
   text-transform: uppercase;
   letter-spacing: 0.02em;
   margin: 0;

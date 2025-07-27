@@ -9,17 +9,20 @@ const props = defineProps<{
 </script>
 
 <template>
-  <li class="hint" :class="{ found: isFound }">
+  <li class="word-display" :class="{ found: isFound }">
     <span class="list-marker" aria-hidden="true">
       <CircleIcon class="circle-icon" />
       <CheckIcon class="check-icon" pathLength="100" />
     </span>
-    <span class="hint-text">{{ word.hint }} ({{ word.text.length }} letters)</span>
+    <span class="text">
+      <span class="hint">{{ word.hint }}</span>
+      <span class="count">({{ word.text.length }} letters)</span>
+    </span>
   </li>
 </template>
 
 <style scoped>
-.hint {
+.word-display {
   display: flex;
   align-items: baseline;
   gap: 0.5ch;
@@ -28,6 +31,26 @@ const props = defineProps<{
   transition-property: color, font-weight;
   transition-duration: 0.2s;
   transition-timing-function: ease-out;
+}
+
+.text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
+}
+
+.hint {
+  font-weight: 500;
+  font-family: var(--font-serif);
+}
+
+.count {
+  color: var(--color-text-muted);
+  transition: color 0.2s ease-out;
+}
+
+.found .count {
+  color: inherit;
 }
 
 .found {
