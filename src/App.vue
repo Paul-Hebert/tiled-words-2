@@ -17,7 +17,6 @@ import Button from './components/Button.vue'
 .app-container {
   position: relative;
   width: 100%;
-  min-height: 100svh;
   display: grid;
   grid-template-rows: auto 1fr;
 }

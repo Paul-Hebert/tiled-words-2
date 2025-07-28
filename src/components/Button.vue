@@ -2,11 +2,17 @@
 defineProps<{
   round?: boolean
   href?: string
+  animateIn?: boolean
 }>()
 </script>
 
 <template>
-  <component :is="href ? 'router-link' : 'button'" class="button" :class="{ round }" :to="href">
+  <component
+    :is="href ? 'router-link' : 'button'"
+    class="button"
+    :class="{ round, 'animate-in': animateIn }"
+    :to="href"
+  >
     <span class="button-inner">
       <slot />
     </span>
@@ -77,6 +83,10 @@ defineProps<{
   font-weight: 600;
 }
 
+.button.animate-in .button-inner {
+  animation: animateIn 1s var(--ease-out-back) both;
+}
+
 .button::before {
   content: '';
   background: var(--color-background-secondary);
@@ -86,5 +96,11 @@ defineProps<{
 
 .button:focus-visible .button-inner {
   outline: 3px solid var(--color-interactive);
+}
+
+@keyframes animateIn {
+  from {
+    transform: translate(0, var(--translation));
+  }
 }
 </style>

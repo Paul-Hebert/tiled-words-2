@@ -88,13 +88,13 @@ const foundWords = computed(() => {
 // Watch for new word discoveries and play success sound
 watch(foundWords, (newFoundWords, oldFoundWords) => {
   if (oldFoundWords && newFoundWords.length > oldFoundWords.length) {
-    playSound('success.mp3')
+    if (newFoundWords.length === allWords.value.length) {
+      playSound('success-2.mp3')
+    } else {
+      playSound('success.mp3')
+    }
   }
 })
-
-const emit = defineEmits<{
-  (e: 'next-level'): void
-}>()
 
 const startDrag = (tileElement: SVGGElement, tileId: string, startDragPoint: Point) => {
   currentTileElement.value = tileElement
@@ -204,12 +204,6 @@ const endDrag = async () => {
   dragAdjustment.value = null
   shadowPosition.value = null
   justDroppedTileId.value = tile.id
-
-  await nextTick()
-
-  if (foundWords.value.length === allWords.value.length) {
-    emit('next-level')
-  }
 }
 
 // Document event handlers
@@ -251,21 +245,11 @@ onUnmounted(() => {
 
 <template>
   <div class="container" @pointerdown="handlePointerDown">
-    <div class="meta">
-      <h1 class="theme">
-        {{ theme }}
-      </h1>
+    <h1 class="theme">
+      {{ theme }}
+    </h1>
 
-      <WordsSection :words="words" :found-words="foundWords.map((word) => word.text)" />
-
-      <template v-if="foundWords.length === allWords.length">
-        <Button v-if="nextLevelId" :href="`/level/${nextLevelId}`" class="next-level-btn">
-          Next Level
-          <ArrowRightIcon aria-hidden="true" width="16" height="16" />
-        </Button>
-        <p v-else class="win-message">🎉 Congratulations! You've completed all levels!</p>
-      </template>
-    </div>
+    <WordsSection :words="words" :found-words="foundWords.map((word) => word.text)" class="words" />
 
     <Board
       :board-viewbox-size="boardViewboxSize"
@@ -280,7 +264,16 @@ onUnmounted(() => {
       :placement-is-valid="placementIsValid"
       :found-words="foundWords"
       ref="boardComponent"
+      class="board"
     />
+
+    <div v-if="foundWords.length === allWords.length" class="success">
+      <Button v-if="nextLevelId" :href="`/level/${nextLevelId}`" animate-in>
+        Next Level
+        <ArrowRightIcon aria-hidden="true" width="16" height="16" stroke-width="3" />
+      </Button>
+      <p v-else class="win-message">🎉 Congratulations! You've completed all levels!</p>
+    </div>
   </div>
 </template>
 
@@ -290,35 +283,56 @@ onUnmounted(() => {
 }
 
 .container {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
   width: 100%;
-  height: 100%;
-  display: grid;
   max-width: 500px;
   margin: 0 auto;
+  gap: 1rem;
 
-  @media (min-width: 768px) {
-    display: flex;
+  @media (width >= 800px) {
+    display: grid;
     max-width: 1200px;
-    gap: 2rem;
-    align-items: center;
-
-    .board-container {
-      order: -1;
-      flex-basis: 66%;
-    }
-
-    .meta {
-      flex-basis: 33%;
-    }
+    column-gap: 2rem;
+    row-gap: 1rem;
+    grid-template-areas:
+      'board theme'
+      'board words'
+      'board success';
+    grid-template-rows: auto auto 1fr;
+    grid-template-columns: 2fr 1fr;
   }
 }
 
-.meta {
-  display: grid;
-  gap: 1rem;
-  align-content: center;
+.board {
+  grid-area: board;
+}
+
+.theme {
+  grid-area: theme;
+}
+
+.words {
+  grid-area: words;
+}
+
+.success {
+  grid-area: success;
+  align-self: end;
+
+  @media (width < 800px) {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    margin-inline: -1rem;
+    padding: 1rem;
+    padding-top: 1.25rem;
+    padding-bottom: 0.5rem;
+    width: calc(100% + 2rem);
+    background: var(--color-background);
+    border-top: 1px solid var(--color-background-secondary);
+  }
 }
 </style>

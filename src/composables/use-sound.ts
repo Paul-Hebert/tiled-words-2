@@ -5,7 +5,7 @@ export const audioContext = new AudioContext()
 const sounds: Record<string, HTMLAudioElement> = {}
 const isMuted = ref(true)
 
-const availableSounds = ['placed.mp3', 'success.mp3', 'whoosh-3.mp3']
+const availableSounds = ['placed.mp3', 'success.mp3', 'success-2.mp3', 'whoosh-3.mp3']
 
 availableSounds.forEach((sound) => {
   sounds[sound] = new Audio(`/sounds/${sound}`)

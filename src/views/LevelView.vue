@@ -25,24 +25,13 @@ const nextLevelId = computed(() => {
 </script>
 
 <template>
-  <div v-if="currentLevel" class="level-view-container">
-    <MuteToggleButton />
-
-    <Level
-      :theme="currentLevel.theme"
-      :words="currentLevel.words"
-      :starting-tiles="currentLevel.tiles"
-      :board-grid-size="currentLevel.gridSize"
-      :key="currentLevel.theme"
-      :next-level-id="nextLevelId"
-    >
-    </Level>
-  </div>
+  <Level
+    :theme="currentLevel.theme"
+    :words="currentLevel.words"
+    :starting-tiles="currentLevel.tiles"
+    :board-grid-size="currentLevel.gridSize"
+    :key="currentLevel.theme"
+    :next-level-id="nextLevelId"
+  >
+  </Level>
 </template>
-
-<style scoped>
-.level-view-container {
-  position: relative;
-  width: 100%;
-}
-</style>

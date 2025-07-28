@@ -12,32 +12,39 @@ defineProps<{
 </script>
 
 <template>
-  <div class="words-section">
-    <h2 class="words-header">Across</h2>
-    <ul class="words">
-      <WordDisplay
-        v-for="word in words.horizontal"
-        :key="word.text"
-        :word="word"
-        :is-found="foundWords.some((foundWord) => foundWord === word.text)"
-      />
-    </ul>
-  </div>
+  <div class="words-section-container">
+    <div class="words-section">
+      <h2 class="words-header">Across</h2>
+      <ul class="words">
+        <WordDisplay
+          v-for="word in words.horizontal"
+          :key="word.text"
+          :word="word"
+          :is-found="foundWords.some((foundWord) => foundWord === word.text)"
+        />
+      </ul>
+    </div>
 
-  <div class="words-section">
-    <h2 class="words-header">Down</h2>
-    <ul class="words">
-      <WordDisplay
-        v-for="word in words.vertical"
-        :key="word.text"
-        :word="word"
-        :is-found="foundWords.some((foundWord) => foundWord === word.text)"
-      />
-    </ul>
+    <div class="words-section">
+      <h2 class="words-header">Down</h2>
+      <ul class="words">
+        <WordDisplay
+          v-for="word in words.vertical"
+          :key="word.text"
+          :word="word"
+          :is-found="foundWords.some((foundWord) => foundWord === word.text)"
+        />
+      </ul>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.words-section-container {
+  display: grid;
+  gap: 1rem;
+}
+
 .words-header {
   font-size: 1.125rem;
   font-weight: 650;
