@@ -44,6 +44,17 @@ onMounted(() => {
 
   setTimeout(() => {
     demoTiles.value.find((tile) => tile.id === 'demo-tile-2')!.rotations = 4
+    foundWords.value.push({
+      text: 'words',
+      direction: 'horizontal',
+      cells: [
+        { x: 4, y: 1 },
+        { x: 4, y: 2 },
+        { x: 4, y: 3 },
+        { x: 4, y: 4 },
+        { x: 4, y: 5 },
+      ],
+    })
   }, 1000)
 
   setTimeout(() => {
@@ -52,23 +63,16 @@ onMounted(() => {
 
   setTimeout(() => {
     demoTiles.value.find((tile) => tile.id === 'demo-tile-3')!.position = { x: 1, y: 5 }
-    foundWords.value = [
-      {
-        text: 'hackz',
-        direction: 'horizontal',
-        cells: [
-          { x: 4, y: 1 },
-          { x: 4, y: 2 },
-          { x: 4, y: 3 },
-          { x: 4, y: 4 },
-          { x: 4, y: 5 },
-          { x: 5, y: 5 },
-          { x: 3, y: 5 },
-          { x: 2, y: 5 },
-          { x: 1, y: 5 },
-        ],
-      },
-    ]
+    foundWords.value.push({
+      text: 'words',
+      direction: 'horizontal',
+      cells: [
+        { x: 5, y: 5 },
+        { x: 3, y: 5 },
+        { x: 2, y: 5 },
+        { x: 1, y: 5 },
+      ],
+    })
   }, 1500)
 })
 </script>
