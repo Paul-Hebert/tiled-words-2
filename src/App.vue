@@ -5,8 +5,8 @@ import Button from './components/Button.vue'
 
 <template>
   <div class="app-container">
-    <header>
-      <Button href="/" class="home-link" v-if="$route.path !== '/'">Home</Button>
+    <header v-if="$route.path !== '/'">
+      <Button href="/" class="home-link">Home</Button>
       <MuteToggleButton />
     </header>
     <RouterView />
