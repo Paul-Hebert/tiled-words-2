@@ -29,6 +29,10 @@ const router = createRouter({
       component: LevelList,
     },
   ],
+  scrollBehavior() {
+    // Always scroll to top when navigating
+    return { top: 0 }
+  },
 })
 
 export default router
