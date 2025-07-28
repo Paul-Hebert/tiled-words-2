@@ -244,7 +244,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="container" @pointerdown="handlePointerDown">
+  <div class="container">
     <h1 class="theme">
       {{ theme }}
     </h1>
@@ -252,6 +252,7 @@ onUnmounted(() => {
     <WordsSection :words="words" :found-words="foundWords.map((word) => word.text)" class="words" />
 
     <Board
+      @pointerdown="handlePointerDown"
       :board-viewbox-size="boardViewboxSize"
       :board-grid-size="boardGridSize"
       :board-grid-scale="boardGridScale"
