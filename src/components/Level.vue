@@ -105,6 +105,12 @@ const startDrag = (tileElement: SVGGElement, tileId: string, startDragPoint: Poi
 }
 
 const handlePointerDown = (e: PointerEvent) => {
+  // If the pointer target was a link or button (or was inside one) return early
+  const target = e.target as Element
+  if (target.closest('a, button, [role="button"]')) {
+    return
+  }
+
   if (!boardElement.value) {
     return
   }
@@ -244,7 +250,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" @pointerdown="handlePointerDown">
     <h1 class="theme">
       {{ theme }}
     </h1>
@@ -252,7 +258,6 @@ onUnmounted(() => {
     <WordsSection :words="words" :found-words="foundWords.map((word) => word.text)" class="words" />
 
     <Board
-      @pointerdown="handlePointerDown"
       :board-viewbox-size="boardViewboxSize"
       :board-grid-size="boardGridSize"
       :board-grid-scale="boardGridScale"
