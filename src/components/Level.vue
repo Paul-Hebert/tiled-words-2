@@ -137,35 +137,9 @@ const handlePointerDown = (e: PointerEvent) => {
     ) as SVGGElement | null
     if (tileElement) {
       startDrag(tileElement, closestCell.tile.id, point)
+      e.preventDefault()
     }
   }
-}
-
-const handleMove = (position: Point) => {
-  if (
-    currentTileId.value === null ||
-    startingDragPoint?.value === null ||
-    !boardElement.value ||
-    !currentTileElement.value
-  ) {
-    return
-  }
-
-  dragAdjustment.value = getBoardScaledDelta(
-    position,
-    startingDragPoint.value,
-    boardElement.value,
-    boardViewboxSize,
-  )
-
-  // Calculate shadow position using helper function
-  shadowPosition.value = getShadowPosition(
-    boardElement.value,
-    currentTileElement.value,
-    props.boardGridSize,
-    selectedTile.value!,
-    gridState.value,
-  )
 }
 
 const handleTileTap = (tileId: string) => {
@@ -214,7 +188,32 @@ const endDrag = async () => {
 
 // Document event handlers
 const handleDocumentPointerMove = (e: PointerEvent) => {
-  handleMove({ x: e.clientX, y: e.clientY })
+  if (
+    currentTileId.value === null ||
+    startingDragPoint?.value === null ||
+    !boardElement.value ||
+    !currentTileElement.value
+  ) {
+    return
+  }
+
+  e.preventDefault()
+
+  dragAdjustment.value = getBoardScaledDelta(
+    { x: e.clientX, y: e.clientY },
+    startingDragPoint.value,
+    boardElement.value,
+    boardViewboxSize,
+  )
+
+  // Calculate shadow position using helper function
+  shadowPosition.value = getShadowPosition(
+    boardElement.value,
+    currentTileElement.value,
+    props.boardGridSize,
+    selectedTile.value!,
+    gridState.value,
+  )
 }
 
 const handleDocumentPointerUp = () => {
@@ -233,24 +232,32 @@ const handleVisibilityChange = () => {
   }
 }
 
+const preventDefault = (e: Event) => {
+  e.preventDefault()
+}
+
 // Add and remove document event listeners
 onMounted(() => {
-  document.addEventListener('pointermove', handleDocumentPointerMove)
-  document.addEventListener('pointerup', handleDocumentPointerUp)
-  document.addEventListener('pointerleave', handleDocumentPointerLeave)
-  document.addEventListener('visibilitychange', handleVisibilityChange)
+  boardComponent.value?.$el.addEventListener('touchstart', preventDefault, { passive: false })
+  document.addEventListener('pointermove', handleDocumentPointerMove, { passive: false })
+  document.addEventListener('pointerup', handleDocumentPointerUp, { passive: false })
+  document.addEventListener('pointerleave', handleDocumentPointerLeave, { passive: false })
+  document.addEventListener('visibilitychange', handleVisibilityChange, { passive: false })
+  document.addEventListener('pointerdown', handlePointerDown, { passive: false })
 })
 
 onUnmounted(() => {
+  boardComponent.value?.$el.removeEventListener('touchstart', preventDefault)
   document.removeEventListener('pointermove', handleDocumentPointerMove)
   document.removeEventListener('pointerup', handleDocumentPointerUp)
   document.removeEventListener('pointerleave', handleDocumentPointerLeave)
   document.removeEventListener('visibilitychange', handleVisibilityChange)
+  document.removeEventListener('pointerdown', handlePointerDown)
 })
 </script>
 
 <template>
-  <div class="container" @pointerdown="handlePointerDown">
+  <div class="container">
     <h1 class="theme">
       {{ theme }}
     </h1>
