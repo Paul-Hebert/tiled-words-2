@@ -88,12 +88,11 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 270px;
+  width: 100%;
 
   @media (width > 450px) and (width < 850px) {
     flex-direction: row-reverse;
     align-items: center;
-    max-width: none;
     gap: 2rem;
 
     > * {
@@ -103,6 +102,10 @@ onUnmounted(() => {
     .instruction-item-title {
       font-size: 1.75rem;
     }
+  }
+
+  @media (width >= 850px) {
+    max-width: 270px;
   }
 }
 
