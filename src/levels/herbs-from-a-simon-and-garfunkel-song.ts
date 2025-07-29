@@ -39,14 +39,14 @@ export const herbsFromASimonAndGarfunkelSong: Level = {
     {
       id: 'tile-3',
       position: {
-        x: 3,
+        x: 4,
         y: 8,
       },
       grid: padGridToSquare([
         ['g', null],
         ['e', 'm'],
       ]),
-      rotations: 3,
+      rotations: 0,
     },
     {
       id: 'tile-4',
