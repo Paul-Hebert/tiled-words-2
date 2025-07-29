@@ -34,13 +34,17 @@ html {
   --color-background-tertiary: hsl(var(--hue-theme), 20%, 98%);
 
   --color-interactive: hsl(var(--hue-interactive), 100%, 40%);
-  --color-interactive-muted: hsl(var(--hue-interactive), 100%, 80%);
+  --color-interactive-secondary: hsl(var(--hue-interactive), 50%, 70%);
 
   --color-success: hsl(var(--hue-theme), 71%, 48%);
 
   --color-invalid: hsl(0, 100%, 50%);
 
   --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --fluid-sizing-xxl: clamp(2rem, calc(1rem + 5vw), 5rem);
+
+  --fluid-sizing-xl: clamp(1.5rem, calc(1rem + 2vw), 3rem);
 }
 
 h1,
@@ -53,6 +57,10 @@ h6 {
   font-family: var(--font-serif);
   font-weight: 700;
   margin: 0;
+}
+
+h1 {
+  font-size: var(--fluid-sizing-xxl);
 }
 
 a {

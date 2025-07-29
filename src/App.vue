@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import MuteToggleButton from './components/MuteToggleButton.vue'
-import Button from './components/Button.vue'
+import { ArrowLeftIcon } from 'lucide-vue-next'
 </script>
 
 <template>
-  <div class="app-container">
+  <div class="app-container" :class="{ 'has-header': $route.path !== '/' }">
     <header v-if="$route.path !== '/'">
-      <Button href="/" class="home-link">Home</Button>
+      <router-link to="/" class="home-link">
+        <ArrowLeftIcon />
+        Home
+      </router-link>
       <MuteToggleButton />
     </header>
     <RouterView />
@@ -18,7 +21,11 @@ import Button from './components/Button.vue'
   position: relative;
   width: 100%;
   display: grid;
-  grid-template-rows: auto 1fr;
+  align-items: center;
+}
+
+.has-header {
+  grid-template-rows: 1fr auto 1fr;
 }
 
 header {
@@ -31,5 +38,10 @@ header {
 
 .home-link {
   margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  text-decoration: none;
 }
 </style>

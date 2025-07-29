@@ -42,22 +42,6 @@ import LogoExample from '@/components/instructions/LogoExample.vue'
   color: var(--color-text-muted);
 }
 
-.level-list {
-  padding-left: 1em;
-}
-
-.level-item {
-  margin-bottom: 0.5em;
-  font-size: 2rem;
-  font-family: var(--font-serif);
-  font-weight: 700;
-}
-
-.level-link {
-  color: inherit;
-  font-weight: inherit;
-}
-
 hr {
   opacity: 0.2;
 }

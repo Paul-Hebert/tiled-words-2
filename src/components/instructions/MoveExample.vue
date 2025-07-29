@@ -1,77 +1,68 @@
 <script setup lang="ts">
 import Board from '@/components/Board.vue'
-import type { Tile, WordResult } from '@/types'
-import { ref, onMounted, onUnmounted } from 'vue'
+import type { Point, Tile, WordResult } from '@/types'
+import { computed } from 'vue'
+
+interface Props {
+  interval: number
+}
+
+const props = defineProps<Props>()
+
+const computedInterval = computed(() => {
+  return Math.floor((props.interval + 1) / 2)
+})
 
 // Demo tiles for the first instruction
-const demoTiles = ref<Tile[]>([
-  {
-    id: 'demo-tile-1',
-    position: { x: 2, y: 2 },
-    grid: [
-      ['a', null],
-      ['l', 'i'],
-      [null, null],
-    ],
-    rotations: 0,
-  },
-  {
-    id: 'demo-tile-2',
-    position: { x: 4, y: 3 },
-    grid: [
-      ['o', 'n'],
-      ['l', null],
-      [null, null],
-    ],
-    rotations: 0,
-  },
-])
-
-// Animation interval
-let animationInterval: number | null = null
-
-const foundWords = ref<WordResult[]>([])
-
-// Animate the first tile position
-const animateTiles = () => {
+const demoTiles = computed<Tile[]>(() => {
   const positions = [
     { x: 0, y: 1 },
     { x: 2, y: 2 },
   ]
 
-  let currentIndex = 0
+  const currentIndex = computedInterval.value % positions.length
+  const position = positions[currentIndex]
 
-  animationInterval = setInterval(() => {
-    currentIndex = (currentIndex + 1) % positions.length
-    demoTiles.value[0].position = positions[currentIndex]
-
-    if (currentIndex === 1) {
-      foundWords.value = [
-        {
-          text: 'drag',
-          direction: 'horizontal',
-          cells: [
-            { x: 2, y: 3 },
-            { x: 3, y: 3 },
-            { x: 4, y: 3 },
-            { x: 5, y: 3 },
-          ],
-        },
-      ]
-    } else {
-      foundWords.value = []
-    }
-  }, 2000)
-}
-
-onMounted(() => {
-  animateTiles()
+  return [
+    {
+      id: 'demo-tile-1',
+      position,
+      grid: [
+        ['a', null],
+        ['l', 'i'],
+        [null, null],
+      ],
+      rotations: 0,
+    },
+    {
+      id: 'demo-tile-2',
+      position: { x: 4, y: 3 },
+      grid: [
+        ['o', 'n'],
+        ['l', null],
+        [null, null],
+      ],
+      rotations: 0,
+    },
+  ]
 })
 
-onUnmounted(() => {
-  if (animationInterval) {
-    clearInterval(animationInterval)
-  }
+const exampleFoundWords: WordResult[] = [
+  {
+    text: 'drag',
+    direction: 'horizontal',
+    cells: [
+      { x: 2, y: 3 },
+      { x: 3, y: 3 },
+      { x: 4, y: 3 },
+      { x: 5, y: 3 },
+    ],
+  },
+]
+
+const foundWords = computed<WordResult[]>(() => {
+  const currentIndex = computedInterval.value % 2
+  return currentIndex === 1 ? exampleFoundWords : []
 })
 </script>
 

@@ -40,19 +40,16 @@ import { ArrowLeftIcon } from 'lucide-vue-next'
   gap: 1rem;
 }
 
-.title {
-  font-size: 3rem;
-}
-
 .level-list {
   padding-left: 1em;
 }
 
 .level-item {
   margin-bottom: 0.5em;
-  font-size: 2rem;
+  font-size: var(--fluid-sizing-xl);
   font-family: var(--font-serif);
-  font-weight: 700;
+  font-style: italic;
+  font-weight: 600;
 }
 
 .level-link {

@@ -291,10 +291,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.theme {
-  font-size: 2rem;
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -311,10 +307,12 @@ onUnmounted(() => {
     column-gap: 2rem;
     row-gap: 1rem;
     grid-template-areas:
+      'board .'
       'board theme'
       'board words'
-      'board success';
-    grid-template-rows: auto auto 1fr;
+      'board success'
+      'board .';
+    grid-template-rows: 1rem auto auto 1fr 1rem;
     grid-template-columns: 2fr 1fr;
   }
 }
@@ -325,6 +323,7 @@ onUnmounted(() => {
 
 .theme {
   grid-area: theme;
+  font-size: var(--fluid-sizing-xl);
 }
 
 .words {

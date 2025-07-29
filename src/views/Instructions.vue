@@ -3,6 +3,27 @@ import Button from '@/components/Button.vue'
 import MoveExample from '@/components/instructions/MoveExample.vue'
 import SpinExample from '@/components/instructions/SpinExample.vue'
 import WordsExample from '@/components/instructions/WordsExample.vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+
+// Interval management for animations
+let animationInterval: number | null = null
+const currentInterval = ref(0)
+
+const startAnimation = () => {
+  animationInterval = setInterval(() => {
+    currentInterval.value++
+  }, 1250)
+}
+
+onMounted(() => {
+  startAnimation()
+})
+
+onUnmounted(() => {
+  if (animationInterval) {
+    clearInterval(animationInterval)
+  }
+})
 </script>
 
 <template>
@@ -13,15 +34,15 @@ import WordsExample from '@/components/instructions/WordsExample.vue'
       <ol class="instructions-list">
         <li class="instruction-item">
           <span class="instruction-item-title">Drag tiles to move them</span>
-          <MoveExample class="example" />
+          <MoveExample class="example" :interval="currentInterval" />
         </li>
         <li class="instruction-item">
           <span class="instruction-item-title">Tap tiles to spin them</span>
-          <SpinExample class="example" />
+          <SpinExample class="example" :interval="currentInterval" />
         </li>
         <li class="instruction-item">
           <span class="instruction-item-title">Connect tiles to find all the hinted words</span>
-          <WordsExample class="example" />
+          <WordsExample class="example" :interval="currentInterval" />
         </li>
       </ol>
 
@@ -46,21 +67,19 @@ import WordsExample from '@/components/instructions/WordsExample.vue'
 }
 
 .title {
-  font-size: 3rem;
-
-  @media (min-width: 800px) {
+  @media (width > 450px) {
     text-align: center;
   }
 }
 
 .instructions-list {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   list-style: none;
   padding: 0;
   display: grid;
   gap: 2rem;
 
-  @media (min-width: 850px) {
+  @media (width >= 850px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
@@ -70,14 +89,28 @@ import WordsExample from '@/components/instructions/WordsExample.vue'
   flex-direction: column;
   gap: 1rem;
   max-width: 270px;
+
+  @media (width > 450px) and (width < 850px) {
+    flex-direction: row-reverse;
+    align-items: center;
+    max-width: none;
+    gap: 2rem;
+
+    > * {
+      width: 50%;
+    }
+
+    .instruction-item-title {
+      font-size: 1.75rem;
+    }
+  }
 }
 
 .instruction-item-title {
-  font-size: 1.5rem;
   font-family: var(--font-sans);
   font-weight: 600;
 
-  @media (min-width: 800px) {
+  @media (width >= 850px) {
     text-align: center;
   }
 }

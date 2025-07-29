@@ -23,15 +23,17 @@ A word game where you reconstruct crosswords out of tiles.
 - Improve how levels are defined
 - E2E tests
 - Refactors
+
   - Simplify shadow position + can place tile
   - Abstract shared parts of shadow position and the rotate tile in place helper
+
+- Performance
+  - Host fonts locally
   - Replace `while` loop in getShadowPosition: have `canPlaceTile` return the exact offset required
 
 ## Bugs
 
 - Sounds not working right on iOS
-- Prevent zoom in iOS on double tap
-- Prevent "back swipe" in iOS
 - Safari: clicking selects text
 
 ## Lisa feedback
@@ -42,11 +44,10 @@ A word game where you reconstruct crosswords out of tiles.
 ## Before sharing with beta playtesters
 
 - Fix or disable sounds
+  - reduce to just success?
 - Improve responsive layout
   - overflow on landscape iPad
   - unused space on laptop
   - Overflow on iOS
-- Improve iOS gesture issues (enable scrolling, avoid zooming, etc.)
-- Scroll to top on page navigation
 - Link instructions from nav (in modal?)
 - Better "next level"/winning UI

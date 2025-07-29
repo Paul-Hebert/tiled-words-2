@@ -67,7 +67,7 @@ defineProps<{
 
 .button-inner {
   background: var(--color-background);
-  border: 1px solid var(--color-background-secondary);
+  border: 1px solid var(--color-interactive-secondary);
   border-radius: inherit;
   translate: 0 calc(var(--translation) * -1);
   transition: translate 0.1s ease-out;
@@ -78,7 +78,8 @@ defineProps<{
   user-select: none;
   padding: 0.5em;
   will-change: transform;
-  width: 100%;
+  width: calc(100% + 2px);
+  margin-inline: -1px;
   height: 100%;
   font-weight: 600;
 }
@@ -89,7 +90,7 @@ defineProps<{
 
 .button::before {
   content: '';
-  background: var(--color-background-secondary);
+  background: var(--color-interactive-secondary);
   position: absolute;
   inset: 0;
 }

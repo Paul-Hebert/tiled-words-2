@@ -1,45 +1,32 @@
 <script setup lang="ts">
 import WordsSection from '@/components/WordsSection.vue'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed } from 'vue'
+
+interface Props {
+  interval: number
+}
+
+const props = defineProps<Props>()
 
 const words = {
   vertical: [{ text: 'goose', hint: 'Duck, duck, _____' }],
   horizontal: [{ text: 'lion', hint: 'King of the jungle' }],
 }
 
-const foundWords = ref<string[]>([])
+const foundWords = computed<string[]>(() => {
+  const currentIndex = props.interval
 
-let animationInterval: number | null = null
+  const result: string[] = []
 
-// Animate the first tile position
-const animateTiles = () => {
-  let currentIndex = 0
-
-  animationInterval = setInterval(() => {
-    currentIndex++
-
-    if (currentIndex % 2 === 1) {
-      foundWords.value.push('lion')
-    } else {
-      foundWords.value = foundWords.value.filter((word) => word !== 'lion')
-    }
-
-    if (currentIndex % 4 === 1) {
-      foundWords.value.push('goose')
-    } else {
-      foundWords.value = foundWords.value.filter((word) => word !== 'goose')
-    }
-  }, 2000)
-}
-
-onMounted(() => {
-  animateTiles()
-})
-
-onUnmounted(() => {
-  if (animationInterval) {
-    clearInterval(animationInterval)
+  if (Math.floor((currentIndex + 1) / 2) % 2 === 1) {
+    result.push('lion')
   }
+
+  if (Math.floor(currentIndex / 2) % 4 === 1) {
+    result.push('goose')
+  }
+
+  return result
 })
 </script>
 

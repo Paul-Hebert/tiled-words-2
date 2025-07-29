@@ -1,72 +1,61 @@
 <script setup lang="ts">
 import Board from '@/components/Board.vue'
 import type { Tile, WordResult } from '@/types'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { computed } from 'vue'
 
-// Demo tiles for the first instruction
-const demoTiles = ref<Tile[]>([
-  {
-    id: 'demo-tile-1',
-    position: { x: 1, y: 0 },
-    grid: [
-      [null, 'g', null],
-      [null, 'o', null],
-      ['p', 'o', null],
-    ],
-    rotations: 3,
-  },
-  {
-    id: 'demo-tile-2',
-    position: { x: 2, y: 3 },
-    grid: [
-      ['s', 'n'],
-      ['e', null],
-    ],
-    rotations: 0,
-  },
-])
-
-// Animation interval
-let animationInterval: number | null = null
-
-const foundWords = ref<WordResult[]>([])
-
-// Animate the first tile position
-const animateTiles = () => {
-  let rotations = 3
-
-  animationInterval = setInterval(() => {
-    rotations++
-    demoTiles.value[0].rotations = rotations
-
-    if (rotations % 4 === 0) {
-      foundWords.value = [
-        {
-          text: 'spin',
-          direction: 'horizontal',
-          cells: [
-            { x: 2, y: 0 },
-            { x: 2, y: 1 },
-            { x: 2, y: 2 },
-            { x: 2, y: 3 },
-            { x: 2, y: 4 },
-          ],
-        },
-      ]
-    } else {
-      foundWords.value = []
-    }
-  }, 2000)
+interface Props {
+  interval: number
 }
 
-onMounted(() => {
-  animateTiles()
+const props = defineProps<Props>()
+
+// Demo tiles for the first instruction
+const demoTiles = computed<Tile[]>(() => {
+  const rotations = Math.floor(props.interval / 2) + 3
+
+  return [
+    {
+      id: 'demo-tile-1',
+      position: { x: 1, y: 0 },
+      grid: [
+        [null, 'g', null],
+        [null, 'o', null],
+        ['p', 'o', null],
+      ],
+      rotations,
+    },
+    {
+      id: 'demo-tile-2',
+      position: { x: 2, y: 3 },
+      grid: [
+        ['s', 'n'],
+        ['e', null],
+      ],
+      rotations: 0,
+    },
+  ]
 })
 
-onUnmounted(() => {
-  if (animationInterval) {
-    clearInterval(animationInterval)
+const foundWords = computed<WordResult[]>(() => {
+  const rotations = Math.floor(props.interval / 2) + 3
+
+  if (rotations % 4 === 0) {
+    return [
+      {
+        text: 'spin',
+        direction: 'horizontal',
+        cells: [
+          { x: 2, y: 0 },
+          { x: 2, y: 1 },
+          { x: 2, y: 2 },
+          { x: 2, y: 3 },
+          { x: 2, y: 4 },
+        ],
+      },
+    ]
   }
+
+  return []
 })
 </script>
 
