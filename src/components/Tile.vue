@@ -47,7 +47,9 @@ const svgOutlinePath = computed(() => {
             :class="{
               found: foundCells?.some(
                 (foundCell) =>
-                  foundCell.x === cellIndex + position.x && foundCell.y === rowIndex + position.y,
+                  rotations % 4 === 0 &&
+                  foundCell.x === cellIndex + position.x &&
+                  foundCell.y === rowIndex + position.y,
               ),
             }"
             :style="`--x: ${cellIndex}; --y: ${rowIndex}`"

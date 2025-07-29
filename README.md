@@ -51,3 +51,5 @@ A word game where you reconstruct crosswords out of tiles.
   - Overflow on iOS
 - Link instructions from nav (in modal?)
 - Better "next level"/winning UI
+- Fix router SSR
+- More levels!

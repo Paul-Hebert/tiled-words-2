@@ -67,8 +67,9 @@ export const fruitsAndVeggies: Level = {
         y: 8,
       },
       grid: padGridToSquare([
-        ['i', 'e', 's'],
-        ['h', null, null],
+        ['h', 'i'],
+        [null, 'e'],
+        [null, 's'],
       ]),
       rotations: 0,
     },
