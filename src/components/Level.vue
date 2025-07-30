@@ -281,11 +281,10 @@ onUnmounted(() => {
     />
 
     <div v-if="foundWords.length === allWords.length" class="success">
-      <Button v-if="nextLevelId" :href="`/level/${nextLevelId}`" animate-in>
+      <Button :href="nextLevelId ? `/level/${nextLevelId}` : '/game-completed'" animate-in>
         Next Level
         <ArrowRightIcon aria-hidden="true" width="16" height="16" stroke-width="3" />
       </Button>
-      <p v-else class="win-message">🎉 Congratulations! You've completed all levels!</p>
     </div>
   </div>
 </template>
@@ -296,14 +295,17 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
+  padding-bottom: 0;
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
   gap: 1rem;
 
   @media (width >= 800px) {
+    padding: 1rem;
     display: grid;
     max-width: 1200px;
+    width: fit-content;
     column-gap: 2rem;
     row-gap: 1rem;
     grid-template-areas:
@@ -319,6 +321,13 @@ onUnmounted(() => {
 
 .board {
   grid-area: board;
+  margin-inline: -1rem;
+  width: calc(100% + 2rem);
+
+  @media (width >= 800px) {
+    justify-self: end;
+    margin-inline: 0;
+  }
 }
 
 .theme {
