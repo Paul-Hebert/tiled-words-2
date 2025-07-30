@@ -264,21 +264,22 @@ onUnmounted(() => {
 
     <WordsSection :words="words" :found-words="foundWords.map((word) => word.text)" class="words" />
 
-    <Board
-      :board-viewbox-size="boardViewboxSize"
-      :board-grid-size="boardGridSize"
-      :board-grid-scale="boardGridScale"
-      :current-tile-id="currentTileId"
-      :tiles="tiles"
-      :just-dropped-tile-id="justDroppedTileId"
-      :drag-adjustment="dragAdjustment"
-      :selected-tile="selectedTile"
-      :shadow-position="shadowPosition"
-      :placement-is-valid="placementIsValid"
-      :found-words="foundWords"
-      ref="boardComponent"
-      class="board-wrapper"
-    />
+    <div class="board-wrapper">
+      <Board
+        :board-viewbox-size="boardViewboxSize"
+        :board-grid-size="boardGridSize"
+        :board-grid-scale="boardGridScale"
+        :current-tile-id="currentTileId"
+        :tiles="tiles"
+        :just-dropped-tile-id="justDroppedTileId"
+        :drag-adjustment="dragAdjustment"
+        :selected-tile="selectedTile"
+        :shadow-position="shadowPosition"
+        :placement-is-valid="placementIsValid"
+        :found-words="foundWords"
+        ref="boardComponent"
+      />
+    </div>
 
     <div v-if="foundWords.length === allWords.length" class="success">
       <Button :href="nextLevelId ? `/level/${nextLevelId}` : '/game-completed'" animate-in big>
@@ -296,7 +297,6 @@ onUnmounted(() => {
   gap: 0.75rem;
   padding: 1rem;
   width: 100%;
-  max-width: 500px;
   margin: 0 auto;
   gap: 1rem;
 

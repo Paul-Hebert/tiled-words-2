@@ -91,18 +91,21 @@ const foundWordCells = computed(() => {
   grid-template-rows: 1fr;
   width: 100%;
   touch-action: none;
-  align-items: end;
 }
 
 .board {
   aspect-ratio: 1 / 1;
-  width: 100%;
+  width: auto;
+  height: 100%;
   max-height: 85svh;
   overflow: visible;
-  /* TODO: refine... */
   grid-area: content;
   position: relative;
   pointer-events: none;
+
+  @media (width >= 800px) {
+    justify-self: end;
+  }
 }
 
 .shadow-container {
