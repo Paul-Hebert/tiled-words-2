@@ -7,12 +7,10 @@ A word game where you reconstruct crosswords out of tiles.
 ## Major Features
 
 - More levels
+- Daily challenge vs lots of challenges
 
 ## UI Design
 
-- "Header" design with home button
-- Better responsive layout
-- Better micro-interactions for finding word, completing level
 - Better sounds
 - Favicon + Logo
 
@@ -49,7 +47,6 @@ A word game where you reconstruct crosswords out of tiles.
   - overflow on landscape iPad
   - unused space on laptop
   - Overflow on iOS
-- Link instructions from nav (in modal?)
-- Better "next level"/winning UI
 - Fix router SSR
 - More levels!
+- Survey

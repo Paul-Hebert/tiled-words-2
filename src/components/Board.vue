@@ -96,7 +96,7 @@ const foundWordCells = computed(() => {
 .board {
   aspect-ratio: 1 / 1;
   width: 100%;
-  margin: 0 auto;
+  max-height: 90svh;
   overflow: visible;
   /* TODO: refine... */
   grid-area: content;

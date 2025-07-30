@@ -25,7 +25,11 @@ import { ArrowLeftIcon } from 'lucide-vue-next'
 }
 
 .has-header {
-  grid-template-rows: 1fr auto 1fr;
+  grid-template-rows: 1fr auto;
+
+  @media (width >= 800px) {
+    grid-template-rows: 1fr auto 1fr;
+  }
 }
 
 header {

@@ -3,6 +3,7 @@ import Home from './views/Home.vue'
 import LevelView from './views/LevelView.vue'
 import Instructions from './views/Instructions.vue'
 import LevelList from './views/LevelList.vue'
+import GameCompleted from './views/GameCompleted.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/levels',
       name: 'levels',
       component: LevelList,
+    },
+    {
+      path: '/game-completed',
+      name: 'game-completed',
+      component: GameCompleted,
     },
   ],
   scrollBehavior() {
