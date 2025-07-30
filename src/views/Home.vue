@@ -9,8 +9,8 @@ import LogoExample from '@/components/instructions/LogoExample.vue'
       <LogoExample />
     </div>
     <div class="content">
-      <p class="subtitle">Reconstruct crosswords out of tiles</p>
-      <Button href="/instructions">Get Started</Button>
+      <p class="subtitle">A game where you rebuild broken crosswords out of tiles.</p>
+      <Button href="/instructions">Play</Button>
 
       <router-link to="/levels" style="text-align: center">View Levels</router-link>
 

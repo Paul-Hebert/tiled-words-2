@@ -46,7 +46,7 @@ onUnmounted(() => {
         </li>
       </ol>
 
-      <Button href="/level/1" class="go-button">Let's Go!</Button>
+      <Button href="/level/1" class="go-button">Play</Button>
     </div>
   </div>
 </template>
