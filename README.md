@@ -39,14 +39,28 @@ A word game where you reconstruct crosswords out of tiles.
 - Lock together "correct" tiles - or alternate approach for shifting all tiles...
 - Option to get bonus hints
 
-## Before sharing with beta playtesters
+## Demo/beta release plan
 
-- Fix or disable sounds
-  - reduce to just success?
-- Improve responsive layout
-  - overflow on landscape iPad
-  - unused space on laptop
-  - Overflow on iOS
-- Fix router SSR
-- More levels!
+- Remaining code/design changes
+  - Fix or disable sounds
+    - reduce to just success?
+  - Fix router SSR
+  - More levels?
+  - Basic analytics
+  - Add survey to end game stage
+  - Add share with friends request
 - Survey
+- Deploy
+- Final testing
+  - iPad, iOS, multiple phones
+- Share in waves
+  - Mastodon
+  - Personal friends
+    - Case + Guy
+    - Melissa?
+    - Hebert Fam
+    - Teddy + Alex
+    - T + Nick?
+  - Facebook
+  - LinkedIn?
+- Gather

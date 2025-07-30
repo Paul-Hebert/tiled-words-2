@@ -277,11 +277,11 @@ onUnmounted(() => {
       :placement-is-valid="placementIsValid"
       :found-words="foundWords"
       ref="boardComponent"
-      class="board"
+      class="board-wrapper"
     />
 
     <div v-if="foundWords.length === allWords.length" class="success">
-      <Button :href="nextLevelId ? `/level/${nextLevelId}` : '/game-completed'" animate-in>
+      <Button :href="nextLevelId ? `/level/${nextLevelId}` : '/game-completed'" animate-in big>
         Next Level
         <ArrowRightIcon aria-hidden="true" width="16" height="16" stroke-width="3" />
       </Button>
@@ -295,17 +295,15 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  padding-bottom: 0;
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
   gap: 1rem;
 
   @media (width >= 800px) {
-    padding: 1rem;
     display: grid;
     max-width: 1200px;
-    width: fit-content;
+    width: 100%;
     column-gap: 2rem;
     row-gap: 1rem;
     grid-template-areas:
@@ -315,19 +313,12 @@ onUnmounted(() => {
       'board success'
       'board .';
     grid-template-rows: 1rem auto auto 1fr 1rem;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 66% 33%;
   }
 }
 
-.board {
+.board-wrapper {
   grid-area: board;
-  margin-inline: -1rem;
-  width: calc(100% + 2rem);
-
-  @media (width >= 800px) {
-    justify-self: end;
-    margin-inline: 0;
-  }
 }
 
 .theme {
@@ -349,7 +340,7 @@ onUnmounted(() => {
     width: 100%;
     margin-inline: -1rem;
     padding: 1rem;
-    padding-top: 1.25rem;
+    padding-top: 1.5rem;
     padding-bottom: 0.5rem;
     width: calc(100% + 2rem);
     background: var(--color-background);

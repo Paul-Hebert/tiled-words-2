@@ -20,16 +20,13 @@ import { ArrowLeftIcon } from 'lucide-vue-next'
 .app-container {
   position: relative;
   width: 100%;
+  min-height: 100svh;
   display: grid;
   align-items: center;
 }
 
 .has-header {
-  grid-template-rows: 1fr auto;
-
-  @media (width >= 800px) {
-    grid-template-rows: 1fr auto 1fr;
-  }
+  grid-template-rows: auto 1fr;
 }
 
 header {
@@ -38,6 +35,7 @@ header {
   gap: 1rem;
   align-items: center;
   padding: 1rem;
+  align-self: start;
 }
 
 .home-link {

@@ -91,12 +91,13 @@ const foundWordCells = computed(() => {
   grid-template-rows: 1fr;
   width: 100%;
   touch-action: none;
+  align-items: end;
 }
 
 .board {
   aspect-ratio: 1 / 1;
   width: 100%;
-  max-height: 90svh;
+  max-height: 85svh;
   overflow: visible;
   /* TODO: refine... */
   grid-area: content;

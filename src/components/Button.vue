@@ -3,6 +3,7 @@ defineProps<{
   round?: boolean
   href?: string
   animateIn?: boolean
+  big?: boolean
 }>()
 </script>
 
@@ -10,7 +11,7 @@ defineProps<{
   <component
     :is="href ? 'router-link' : 'button'"
     class="button"
-    :class="{ round, 'animate-in': animateIn }"
+    :class="{ round, 'animate-in': animateIn, big }"
     :to="href"
   >
     <span class="button-inner">
@@ -21,7 +22,8 @@ defineProps<{
 
 <style scoped>
 .button {
-  --translation: 0.25em;
+  --translation-modifier: 1;
+  --translation: calc(0.25em * var(--translation-modifier));
   --border-radius: 0.5em;
 
   color: var(--color-interactive);
@@ -49,7 +51,7 @@ defineProps<{
 }
 
 .button:hover {
-  --translation: 0.5em;
+  --translation: calc(0.5em * var(--translation-modifier));
 }
 
 .button:active {
@@ -82,6 +84,14 @@ defineProps<{
   margin-inline: -1px;
   height: 100%;
   font-weight: 600;
+}
+
+.button.big {
+  --translation-modifier: 2.5;
+
+  .button-inner {
+    padding: 1.5rem;
+  }
 }
 
 .button.animate-in .button-inner {
