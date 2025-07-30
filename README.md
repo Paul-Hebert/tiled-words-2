@@ -63,4 +63,8 @@ A word game where you reconstruct crosswords out of tiles.
     - T + Nick?
   - Facebook
   - LinkedIn?
+  - Cloud Four slack?
+  - Replensyh Slack?
+  - PDX startups slack?
+  - Chico Start slack?
 - Gather
