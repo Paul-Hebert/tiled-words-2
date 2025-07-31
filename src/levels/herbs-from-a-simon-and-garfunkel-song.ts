@@ -3,7 +3,7 @@ import type { Level } from '../types'
 
 export const herbsFromASimonAndGarfunkelSong: Level = {
   theme: 'Herbs from a Simon and Garfunkel song',
-  gridSize: 12,
+  gridSize: 10,
   words: {
     vertical: [
       { text: 'sage', hint: 'A wise person' },
@@ -18,7 +18,7 @@ export const herbsFromASimonAndGarfunkelSong: Level = {
     {
       id: 'tile-1',
       position: {
-        x: 3,
+        x: 2,
         y: 3,
       },
       grid: padGridToSquare([
@@ -30,8 +30,8 @@ export const herbsFromASimonAndGarfunkelSong: Level = {
     {
       id: 'tile-2',
       position: {
-        x: 1,
-        y: 6,
+        x: 0,
+        y: 5,
       },
       grid: padGridToSquare([['r', 'o', 's']]),
       rotations: 0,
@@ -39,7 +39,7 @@ export const herbsFromASimonAndGarfunkelSong: Level = {
     {
       id: 'tile-3',
       position: {
-        x: 4,
+        x: 3,
         y: 8,
       },
       grid: padGridToSquare([
@@ -69,7 +69,7 @@ export const herbsFromASimonAndGarfunkelSong: Level = {
     {
       id: 'tile-6',
       position: {
-        x: 7,
+        x: 6,
         y: 4,
       },
       grid: padGridToSquare([

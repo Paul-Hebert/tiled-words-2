@@ -3,7 +3,7 @@ import type { Level } from '../types'
 
 export const farmAnimals: Level = {
   theme: 'Farm Animals',
-  gridSize: 12,
+  gridSize: 10,
   words: {
     vertical: [
       { text: 'cow', hint: 'Holy ___' },
@@ -19,7 +19,7 @@ export const farmAnimals: Level = {
     {
       id: 'tile-1',
       position: {
-        x: 1,
+        x: 0,
         y: 8,
       },
       grid: padGridToSquare([['o'], ['w']]),
@@ -28,7 +28,7 @@ export const farmAnimals: Level = {
     {
       id: 'tile-2',
       position: {
-        x: 2,
+        x: 1,
         y: 4,
       },
       grid: padGridToSquare([['c', 'h']]),
@@ -46,7 +46,7 @@ export const farmAnimals: Level = {
     {
       id: 'tile-4',
       position: {
-        x: 5,
+        x: 4,
         y: 5,
       },
       grid: padGridToSquare([
@@ -80,7 +80,7 @@ export const farmAnimals: Level = {
       id: 'tile-7',
       position: {
         x: 8,
-        y: 8,
+        y: 7,
       },
       grid: padGridToSquare([
         ['e', null],
