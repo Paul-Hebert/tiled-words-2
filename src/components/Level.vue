@@ -104,6 +104,27 @@ const startDrag = (tileElement: SVGGElement, tileId: string, startDragPoint: Poi
   tapOrDragStartedTime.value = Date.now()
 }
 
+const handleTouchStart = (e: TouchEvent) => {
+  if (!boardElement.value) {
+    return
+  }
+
+  // TODO: we run this on touch start and pointer down which is redundant.
+  // Consolidating could improve performance.
+  const closestCell = findClosestTileCell(
+    { x: e.touches[0].clientX, y: e.touches[0].clientY },
+    tiles.value,
+    touchThreshold,
+    boardElement.value,
+    boardViewboxSize,
+    boardGridScale,
+  )
+
+  if (closestCell) {
+    e.preventDefault()
+  }
+}
+
 const handlePointerDown = (e: PointerEvent) => {
   // If the pointer target was a link or button (or was inside one) return early
   const target = e.target as Element
@@ -232,13 +253,9 @@ const handleVisibilityChange = () => {
   }
 }
 
-const preventDefault = (e: Event) => {
-  e.preventDefault()
-}
-
 // Add and remove document event listeners
 onMounted(() => {
-  boardComponent.value?.$el.addEventListener('touchstart', preventDefault, { passive: false })
+  boardComponent.value?.$el.addEventListener('touchstart', handleTouchStart, { passive: false })
   document.addEventListener('pointermove', handleDocumentPointerMove, { passive: false })
   document.addEventListener('pointerup', handleDocumentPointerUp, { passive: false })
   document.addEventListener('pointerleave', handleDocumentPointerLeave, { passive: false })
@@ -247,7 +264,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  boardComponent.value?.$el.removeEventListener('touchstart', preventDefault)
+  boardComponent.value?.$el.removeEventListener('touchstart', handleTouchStart)
   document.removeEventListener('pointermove', handleDocumentPointerMove)
   document.removeEventListener('pointerup', handleDocumentPointerUp)
   document.removeEventListener('pointerleave', handleDocumentPointerLeave)
