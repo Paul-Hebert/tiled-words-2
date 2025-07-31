@@ -1,33 +1,56 @@
 import { ref } from 'vue'
+import { useSound } from '@vueuse/sound'
 
-export const audioContext = new AudioContext()
-
-const sounds: Record<string, HTMLAudioElement> = {}
 const isMuted = ref(true)
 
-const availableSounds = ['placed.mp3', 'success.mp3', 'success-2.mp3', 'whoosh-3.mp3']
+const isInitialized = ref(false)
 
-availableSounds.forEach((sound) => {
-  sounds[sound] = new Audio(`/sounds/${sound}`)
-})
+interface Sound {
+  name: string
+  volume?: number
+}
 
-// TODO in the future check muted state, etc.
-export function useSound() {
+const availableSounds = [
+  { name: 'placed.mp3', volume: 0.5 },
+  { name: 'success.mp3' },
+  { name: 'success-2.mp3' },
+  { name: 'whoosh-3.mp3', volume: 0.1 },
+]
+
+let soundInstances: Record<string, ReturnType<typeof useSound>> = {}
+
+export function useSoundEffects() {
+  if (!isInitialized.value) {
+    isInitialized.value = true
+    // Create sound instances using @vueuse/sound within the composable
+    soundInstances = availableSounds.reduce(
+      (acc, sound) => {
+        acc[sound.name] = useSound(`/sounds/${sound.name}`, {
+          interrupt: true,
+          html5: true,
+          volume: sound.volume || 1,
+        })
+        return acc
+      },
+      {} as Record<string, ReturnType<typeof useSound>>,
+    )
+  }
+
   const toggleMuted = () => {
-    console.log('toggleMuted', isMuted.value)
     isMuted.value = !isMuted.value
   }
 
-  const playSound = (name: string, volume: number = 1.0) => {
-    if (!availableSounds.includes(name)) {
+  const playSound = (name: string) => {
+    if (!availableSounds.some((sound) => sound.name === name)) {
       throw new Error(`Sound ${name} not found`)
     }
 
     if (isMuted.value) return
 
-    sounds[name].volume = Math.max(0, Math.min(1, volume)) // Clamp volume between 0 and 1
-    sounds[name].fastSeek(0)
-    sounds[name].play()
+    const sound = soundInstances[name]
+    if (sound && sound.play) {
+      sound.play()
+    }
   }
 
   return {

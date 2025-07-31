@@ -31,8 +31,7 @@ A word game where you reconstruct crosswords out of tiles.
 
 ## Bugs
 
-- Sounds not working right on iOS
-- Safari: clicking selects text
+- Rotated squares don't get higlighted even when correct
 
 ## Lisa feedback
 
@@ -42,8 +41,6 @@ A word game where you reconstruct crosswords out of tiles.
 ## Demo/beta release plan
 
 - Remaining code/design changes
-  - Fix or disable sounds
-    - reduce to just success?
   - Fix router SSR
   - More levels?
   - Basic analytics

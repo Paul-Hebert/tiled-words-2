@@ -9,7 +9,7 @@ import { canPlaceTile } from '../../helpers/can-place-tile'
 import { findWords } from '../../helpers/find-words'
 import { rotateTileInPlace } from '../../helpers/rotate-tile-in-place'
 import { findClosestTileCell } from '../../helpers/find-closest-tile-cell'
-import { useSound } from '@/composables/use-sound'
+import { useSoundEffects } from '@/composables/use-sound'
 import Button from './Button.vue'
 import { ArrowRightIcon } from 'lucide-vue-next'
 import Board from './Board.vue'
@@ -26,7 +26,7 @@ const props = defineProps<{
   nextLevelId?: number
 }>()
 
-const { playSound } = useSound()
+const { playSound } = useSoundEffects()
 
 const boardGridScale = 10
 const boardViewboxSize = props.boardGridSize * boardGridScale
@@ -193,7 +193,7 @@ const endDrag = async () => {
   if (!longEnoughForDrag && !farEnoughForDrag) {
     handleTileTap(tile.id)
 
-    playSound('whoosh-3.mp3', 0.1)
+    playSound('whoosh-3.mp3')
   } else if (placementIsValid.value && shadowPosition.value) {
     tile.position = shadowPosition.value
 

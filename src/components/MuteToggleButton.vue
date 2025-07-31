@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Volume2, VolumeOff } from 'lucide-vue-next'
-import { useSound } from '../composables/use-sound'
+import { useSoundEffects } from '../composables/use-sound'
 import Button from './Button.vue'
 
-const { isMuted, toggleMuted } = useSound()
+const { isMuted, toggleMuted } = useSoundEffects()
 </script>
 
 <template>
