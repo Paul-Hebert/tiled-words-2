@@ -90,7 +90,6 @@ const foundWordCells = computed(() => {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   width: 100%;
-  touch-action: none;
 }
 
 .board {

@@ -188,6 +188,7 @@ const svgOutlinePath = computed(() => {
 
 .cell-text-wrapper {
   transform: rotate(calc(var(--rotations, 0) * -90deg));
+  transition: transform 0.2s var(--ease-out-back);
   transform-origin: center;
   transform-box: fill-box;
 }
