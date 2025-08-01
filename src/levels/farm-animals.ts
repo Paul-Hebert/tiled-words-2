@@ -11,7 +11,7 @@ export const farmAnimals: Level = {
       { text: 'pigs', hint: 'When ____ fly' },
     ],
     horizontal: [
-      { text: 'chicken', hint: '_______ out' },
+      { text: 'chicken', hint: 'Bock, bock, bock!' },
       { text: 'horses', hint: 'Hold your ______' },
     ],
   },
