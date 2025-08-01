@@ -9,7 +9,7 @@ const props = defineProps<{
   boardGridSize: number
   boardGridScale: number
   tiles: TileType[]
-  justDroppedTileId: string | null
+  animatedTileIds: string[]
   dragAdjustment: Point | null
   currentTileId: string | null
   selectedTile: TileType | null
@@ -58,7 +58,7 @@ const foundWordCells = computed(() => {
         :grid="tile.grid"
         :scale="10"
         :rotations="tile.rotations"
-        :was-just-dropped="tile.id === justDroppedTileId"
+        :animate-translation="animatedTileIds.includes(tile.id)"
         :drag-adjustment="tile.id === currentTileId ? dragAdjustment : null"
         :is-selected="tile.id === currentTileId"
         :id="tile.id"
@@ -96,7 +96,7 @@ const foundWordCells = computed(() => {
   aspect-ratio: 1 / 1;
   width: auto;
   height: 100%;
-  max-height: 85svh;
+  max-height: calc(100svh - 12rem);
   overflow: visible;
   grid-area: content;
   position: relative;

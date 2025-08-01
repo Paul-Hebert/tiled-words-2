@@ -89,7 +89,7 @@ onMounted(() => {
       :selected-tile="null"
       :shadow-position="null"
       :placement-is-valid="true"
-      :just-dropped-tile-id="currentTileId"
+      :animated-tile-ids="currentTileId ? [currentTileId] : []"
       :not-interactive="true"
       :found-words="foundWords"
     />

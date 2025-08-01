@@ -72,7 +72,7 @@ const foundWords = computed<WordResult[]>(() => {
       :shadow-position="null"
       :placement-is-valid="true"
       :found-words="foundWords"
-      just-dropped-tile-id="demo-tile-1"
+      :animated-tile-ids="['demo-tile-1']"
       :not-interactive="true"
     />
   </div>

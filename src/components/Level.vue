@@ -9,11 +9,13 @@ import { canPlaceTile } from '../../helpers/can-place-tile'
 import { findWords } from '../../helpers/find-words'
 import { rotateTileInPlace } from '../../helpers/rotate-tile-in-place'
 import { findClosestTileCell } from '../../helpers/find-closest-tile-cell'
+import { shiftTiles, type ShiftDirection } from '../../helpers/shift-tiles'
 import { useSoundEffects } from '@/composables/use-sound'
 import Button from './Button.vue'
 import { ArrowRightIcon } from 'lucide-vue-next'
 import Board from './Board.vue'
 import WordsSection from './WordsSection.vue'
+import ShiftControls from './ShiftControls.vue'
 
 const props = defineProps<{
   startingTiles: TileType[]
@@ -44,7 +46,7 @@ const otherTiles = computed(() => {
 })
 
 const currentTileId = ref<string | null>(null)
-const justDroppedTileId = ref<string | null>(null)
+const animatedTileIds = ref<string[]>([])
 const startingDragPoint = ref<Point | null>(null)
 const dragAdjustment = ref<Point | null>(null)
 const boardComponent = ref<InstanceType<typeof Board> | null>(null)
@@ -100,7 +102,7 @@ const startDrag = (tileElement: SVGGElement, tileId: string, startDragPoint: Poi
   currentTileElement.value = tileElement
   currentTileId.value = tileId
   startingDragPoint.value = startDragPoint
-  justDroppedTileId.value = null
+  animatedTileIds.value = []
   tapOrDragStartedTime.value = Date.now()
 }
 
@@ -204,7 +206,7 @@ const endDrag = async () => {
   startingDragPoint.value = null
   dragAdjustment.value = null
   shadowPosition.value = null
-  justDroppedTileId.value = tile.id
+  animatedTileIds.value = [tile.id]
 }
 
 // Document event handlers
@@ -253,6 +255,11 @@ const handleVisibilityChange = () => {
   }
 }
 
+const handleShift = (direction: ShiftDirection) => {
+  animatedTileIds.value = tiles.value.map((tile) => tile.id)
+  shiftTiles(tiles.value, direction, props.boardGridSize)
+}
+
 // Add and remove document event listeners
 onMounted(() => {
   boardComponent.value?.$el.addEventListener('touchstart', handleTouchStart, { passive: false })
@@ -288,7 +295,7 @@ onUnmounted(() => {
         :board-grid-scale="boardGridScale"
         :current-tile-id="currentTileId"
         :tiles="tiles"
-        :just-dropped-tile-id="justDroppedTileId"
+        :animated-tile-ids="animatedTileIds"
         :drag-adjustment="dragAdjustment"
         :selected-tile="selectedTile"
         :shadow-position="shadowPosition"
@@ -297,6 +304,8 @@ onUnmounted(() => {
         ref="boardComponent"
       />
     </div>
+
+    <ShiftControls @shift="handleShift" class="shift-controls" />
 
     <div v-if="foundWords.length === allWords.length" class="success">
       <Button :href="nextLevelId ? `/level/${nextLevelId}` : '/game-completed'" animate-in big>
@@ -322,14 +331,13 @@ onUnmounted(() => {
     max-width: 1200px;
     width: 100%;
     column-gap: 2rem;
-    row-gap: 1rem;
     grid-template-areas:
       'board .'
       'board theme'
       'board words'
       'board success'
-      'board .';
-    grid-template-rows: 1rem auto auto 1fr 1rem;
+      'shift-controls .';
+    grid-template-rows: 1rem auto auto 1fr auto;
     grid-template-columns: 66% 33%;
   }
 }
@@ -345,6 +353,10 @@ onUnmounted(() => {
 
 .words {
   grid-area: words;
+}
+
+.shift-controls {
+  grid-area: shift-controls;
 }
 
 .success {

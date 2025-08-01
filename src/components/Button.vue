@@ -1,17 +1,35 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineProps<{
   round?: boolean
   href?: string
   animateIn?: boolean
   big?: boolean
+  subdued?: boolean
 }>()
+
+const buttonElement = ref<HTMLElement | null>(null)
+const isFakePressed = ref(false)
+
+const fakePress = () => {
+  isFakePressed.value = true
+  setTimeout(() => {
+    isFakePressed.value = false
+  }, 300)
+}
+
+defineExpose({
+  fakePress,
+})
 </script>
 
 <template>
   <component
+    ref="buttonElement"
     :is="href ? 'router-link' : 'button'"
     class="button"
-    :class="{ round, 'animate-in': animateIn, big }"
+    :class="{ round, 'animate-in': animateIn, big, subdued, 'fake-pressed': isFakePressed }"
     :to="href"
   >
     <span class="button-inner">
@@ -25,6 +43,7 @@ defineProps<{
   --translation-modifier: 1;
   --translation: calc(0.25em * var(--translation-modifier));
   --border-radius: 0.5em;
+  --bg-color: var(--color-interactive-secondary);
 
   color: var(--color-interactive);
   background: none;
@@ -42,6 +61,10 @@ defineProps<{
   text-decoration: none;
 }
 
+.button.subdued {
+  --bg-color: var(--color-background-secondary);
+}
+
 .round {
   --border-radius: 50%;
 }
@@ -54,7 +77,8 @@ defineProps<{
   --translation: calc(0.5em * var(--translation-modifier));
 }
 
-.button:active {
+.button:active,
+.button.fake-pressed {
   --translation: 0;
 }
 
@@ -69,7 +93,7 @@ defineProps<{
 
 .button-inner {
   background: var(--color-background);
-  border: 1px solid var(--color-interactive-secondary);
+  border: 1px solid var(--bg-color);
   border-radius: inherit;
   translate: 0 calc(var(--translation) * -1);
   transition: translate 0.1s ease-out;
@@ -100,7 +124,7 @@ defineProps<{
 
 .button::before {
   content: '';
-  background: var(--color-interactive-secondary);
+  background: var(--bg-color);
   position: absolute;
   inset: 0;
 }

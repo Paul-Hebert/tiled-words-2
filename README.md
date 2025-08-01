@@ -46,24 +46,23 @@ A word game where you reconstruct crosswords out of tiles.
   - Basic analytics
   - Add survey to end game stage
   - Add share with friends request
-  - Improve design of found in wrong direction words + highlight the letters (or remove this?)
-  - I rebroke iOS scrolling somehow...
 - Survey
 - Deploy
 - Final testing
   - iPad, iOS, multiple phones
 - Share in waves
+  - Cloud Four slack?
   - Mastodon
   - Personal friends
-    - Case + Guy
+    - ~~Case~~
+    - Guy
     - Melissa?
     - Hebert Fam
     - Teddy + Alex
     - T + Nick?
   - Facebook
   - LinkedIn?
-  - Cloud Four slack?
   - Replensyh Slack?
   - PDX startups slack?
   - Chico Start slack?
-- Gather
+- Review feedback

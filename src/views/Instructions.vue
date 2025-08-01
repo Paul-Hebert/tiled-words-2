@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Button from '@/components/Button.vue'
 import MoveExample from '@/components/instructions/MoveExample.vue'
+import ShiftExample from '@/components/instructions/ShiftExample.vue'
 import SpinExample from '@/components/instructions/SpinExample.vue'
 import WordsExample from '@/components/instructions/WordsExample.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
@@ -41,7 +42,11 @@ onUnmounted(() => {
           <SpinExample class="example" :interval="currentInterval" />
         </li>
         <li class="instruction-item">
-          <span class="instruction-item-title">Connect tiles to find all the hinted words</span>
+          <span class="instruction-item-title">Shift tiles to get unstuck</span>
+          <ShiftExample class="example" :interval="currentInterval" />
+        </li>
+        <li class="instruction-item">
+          <span class="instruction-item-title">Connect hinted words</span>
           <WordsExample class="example" :interval="currentInterval" />
         </li>
       </ol>
@@ -67,7 +72,7 @@ onUnmounted(() => {
 }
 
 .title {
-  @media (width > 450px) {
+  @media (width > 850px) {
     text-align: center;
   }
 }
@@ -79,8 +84,12 @@ onUnmounted(() => {
   display: grid;
   gap: 2rem;
 
+  @media (width >= 500px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
   @media (width >= 850px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 }
 
@@ -90,7 +99,7 @@ onUnmounted(() => {
   gap: 1rem;
   width: 100%;
 
-  @media (width > 450px) and (width < 850px) {
+  /* @media (width > 450px) and (width < 850px) {
     flex-direction: row-reverse;
     align-items: center;
     gap: 2rem;
@@ -102,7 +111,7 @@ onUnmounted(() => {
     .instruction-item-title {
       font-size: 1.75rem;
     }
-  }
+  } */
 
   @media (width >= 850px) {
     max-width: 270px;
@@ -115,6 +124,7 @@ onUnmounted(() => {
 
   @media (width >= 850px) {
     text-align: center;
+    font-size: 1.5rem;
   }
 }
 

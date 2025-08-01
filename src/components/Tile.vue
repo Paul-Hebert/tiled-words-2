@@ -9,7 +9,7 @@ interface TileProps extends Omit<TileType, 'id'> {
   isShadow?: boolean
   isInvalid?: boolean
   isSelected?: boolean
-  wasJustDropped?: boolean
+  animateTranslation?: boolean
   scale: number
   id?: string
   foundCells?: Point[]
@@ -31,7 +31,7 @@ const svgOutlinePath = computed(() => {
         shadow: isShadow,
         invalid: isInvalid,
         selected: isSelected,
-        'was-just-dropped': wasJustDropped,
+        'animate-translation': animateTranslation,
         'not-interactive': notInteractive,
       },
     ]"
@@ -124,7 +124,7 @@ const svgOutlinePath = computed(() => {
   scale: 1.05; */
 }
 
-.tile.was-just-dropped {
+.tile.animate-translation {
   transition: transform 0.1s ease-out;
 }
 

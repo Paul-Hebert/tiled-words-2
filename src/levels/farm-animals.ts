@@ -8,11 +8,11 @@ export const farmAnimals: Level = {
     vertical: [
       { text: 'cow', hint: 'Holy ___' },
       { text: 'sheep', hint: "_____ in wolf's clothing" },
-      { text: 'pig', hint: 'When ___s fly' },
+      { text: 'pigs', hint: 'When ____ fly' },
     ],
     horizontal: [
       { text: 'chicken', hint: '_______ out' },
-      { text: 'horse', hint: 'Hold your _____s' },
+      { text: 'horses', hint: 'Hold your ______' },
     ],
   },
   tiles: [
@@ -37,55 +37,64 @@ export const farmAnimals: Level = {
     {
       id: 'tile-3',
       position: {
-        x: 4,
-        y: 2,
+        x: 2,
+        y: 1,
       },
-      grid: padGridToSquare([['p']]),
+      grid: padGridToSquare([
+        ['p', null],
+        ['i', 'c'],
+      ]),
       rotations: 0,
     },
     {
       id: 'tile-4',
       position: {
         x: 4,
-        y: 5,
+        y: 8,
       },
-      grid: padGridToSquare([
-        ['i', 'c', 'k'],
-        ['g', null, null],
-      ]),
-      rotations: 1,
+      grid: padGridToSquare([['g'], ['s']]),
+      rotations: 3,
     },
     {
       id: 'tile-5',
       position: {
-        x: 6,
-        y: 2,
+        x: 5,
+        y: 0,
       },
       grid: padGridToSquare([
-        ['s', null],
-        ['h', 'o'],
+        ['r', 's'],
+        [null, 'h'],
       ]),
       rotations: 0,
     },
     {
       id: 'tile-6',
       position: {
-        x: 8,
+        x: 6,
         y: 3,
       },
-      grid: padGridToSquare([['r', 's', 'e']]),
+      grid: padGridToSquare([['e', 's']]),
       rotations: 1,
+    },
+    {
+      id: 'tile-6-2',
+      position: {
+        x: 4,
+        y: 3,
+      },
+      grid: padGridToSquare([['h', 'o']]),
+      rotations: 0,
     },
     {
       id: 'tile-7',
       position: {
-        x: 8,
-        y: 7,
+        x: 3,
+        y: 5,
       },
       grid: padGridToSquare([
-        ['e', null],
-        ['e', 'n'],
-        ['p', null],
+        [null, 'e', null],
+        ['k', 'e', 'n'],
+        [null, 'p', null],
       ]),
       rotations: 0,
     },

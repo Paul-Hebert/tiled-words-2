@@ -10,7 +10,10 @@ const props = defineProps<Props>()
 
 const words = {
   vertical: [{ text: 'goose', hint: 'Duck, duck, _____' }],
-  horizontal: [{ text: 'lion', hint: 'King of the jungle' }],
+  horizontal: [
+    { text: 'lion', hint: 'King of the jungle' },
+    { text: 'stuck', hint: 'Stick, stack, _____' },
+  ],
 }
 
 const foundWords = computed<string[]>(() => {
@@ -48,6 +51,6 @@ const foundWords = computed<string[]>(() => {
 }
 
 .words-example-inner {
-  gap: 1em;
+  gap: 0.5em;
 }
 </style>
